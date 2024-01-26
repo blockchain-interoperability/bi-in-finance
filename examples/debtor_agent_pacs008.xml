@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document>
+   <FIToFICstmrCdtTrf>
+      <GrpHdr>
+         <MsgId>to-be-generated</MsgId>
+         <CreDtTm>2012-12-13T12:12:12</CreDtTm>
+         <NbOfTxs>1</NbOfTxs>
+         <CtrlSum>1300000</CtrlSum>
+         <TtlIntrBkSttlmAmt Ccy="AXB">500000</TtlIntrBkSttlmAmt>
+         <IntrBkSttlmDt>2012-12-13</IntrBkSttlmDt>
+         <SttlmInf>
+            <SttlmMtd>CLRG</SttlmMtd>
+         </SttlmInf>
+         <InstgAgt>
+            <FinInstnId>
+               <BICFI>ALPHA</BICFI>
+               <Nm>Bank ALPHA</Nm>
+               <PstlAdr>
+                  <Ctry>CTRY-AXB</Ctry>
+               </PstlAdr>
+            </FinInstnId>
+         </InstgAgt>
+         <InstdAgt>
+            <FinInstnId>
+               <BICFI>BETA</BICFI>
+               <Nm>BANK BETA</Nm>
+               <PstlAdr>
+                  <Ctry>CTRY-AXB</Ctry>
+               </PstlAdr>
+            </FinInstnId>
+         </InstdAgt>
+      </GrpHdr>
+      <CdtTrfTxInf>
+         <PmtId>
+            <UETR>to-be-generated</UETR>
+         </PmtId>
+         <IntrBkSttlmAmt Ccy="AXB">500000</IntrBkSttlmAmt>
+         <IntrBkSttlmDt>2012-12-13</IntrBkSttlmDt>
+         <InstdAmt Ccy="DJK">300000</InstdAmt>
+         <XchgRate>0.6</XchgRate>
+         <InstgAgt>
+            <FinInstnId>
+               <BICFI>ALPHA</BICFI>
+               <Nm>Bank ALPHA</Nm>
+               <PstlAdr>
+                  <Ctry>CTRY-AXB</Ctry>
+               </PstlAdr>
+            </FinInstnId>
+         </InstgAgt>
+         <InstdAgt>
+            <FinInstnId>
+               <BICFI>BETA</BICFI>
+               <Nm>BANK BETA</Nm>
+               <PstlAdr>
+                  <Ctry>CTRY-AXB</Ctry>
+               </PstlAdr>
+            </FinInstnId>
+         </InstdAgt>
+         <IntrmyAgt1>
+            <FinInstnId>
+               <BICFI>THETA</BICFI>
+               <Nm>BANK THETA</Nm>
+               <PstlAdr>
+                  <Ctry>CTRY-DJK</Ctry>
+               </PstlAdr>
+            </FinInstnId>
+         </IntrmyAgt1>
+         <Dbtr>
+            <Nm>BINA Corp</Nm>
+            <PstlAdr>
+               <Ctry>CTRY-AXB</Ctry>
+            </PstlAdr>
+         </Dbtr>
+         <DbtrAcct>
+            <Id>
+               <Othr>
+                  <Id>A37856</Id>
+               </Othr>
+            </Id>
+         </DbtrAcct>
+         <DbtrAgt>
+            <FinInstnId>
+               <BICFI>ALPHA</BICFI>
+               <Nm>Bank ALPHA</Nm>
+               <PstlAdr>
+                  <Ctry>CTRY-AXB</Ctry>
+               </PstlAdr>
+            </FinInstnId>
+         </DbtrAgt>
+         <CdtrAgt>
+            <FinInstnId>
+               <BICFI>GAMMA</BICFI>
+               <Nm>BANK GAMMA</Nm>
+               <PstlAdr>
+                  <Ctry>CTRY-DJK</Ctry>
+               </PstlAdr>
+            </FinInstnId>
+         </CdtrAgt>
+         <Cdtr>
+            <Nm>PETROX Corp</Nm>
+            <PstlAdr>
+               <Ctry>CTRY-DJK</Ctry>
+            </PstlAdr>
+         </Cdtr>
+         <CdtrAcct>
+            <Id>
+               <IBAN>BG65893</IBAN>
+            </Id>
+         </CdtrAcct>
+      </CdtTrfTxInf>
+   </FIToFICstmrCdtTrf>
+</Document>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document>
+   <FIToFIPmtStsRpt>
+      <GrpHdr>
+         <MsgId>to-be-generated</MsgId>
+         <CreDtTm>to-be-generated</CreDtTm>
+         <InstgAgt>
+            <FinInstnId>
+               <BICFI>BETA</BICFI>
+               <Nm>BANK BETA</Nm>
+               <PstlAdr>
+                  <Ctry>CTRY-AXB</Ctry>
+               </PstlAdr>
+            </FinInstnId>
+         </InstgAgt>
+         <InstdAgt>
+            <FinInstnId>
+               <BICFI>THETA</BICFI>
+               <Nm>BANK THETA</Nm>
+               <PstlAdr>
+                  <Ctry>CTRY-DJK</Ctry>
+               </PstlAdr>
+            </FinInstnId>
+         </InstdAgt>
+      </GrpHdr>
+      <OrgnlGrpInfAndSts>
+         <OrgnlMsgId>populate from beta-theta pacs.008</OrgnlMsgId>
+         <OrgnlMsgNmId>pacs.008.001.10</OrgnlMsgNmId>
+         <OrgnlCreDtTm>2012-12-13T12:12:12</OrgnlCreDtTm>
+      </OrgnlGrpInfAndSts>
+      <TxInfAndSts>
+         <OrgnlUETR>populate from beta-theta pacs.008</OrgnlUETR>
+         <TxSts>ACCC</TxSts>
+         <OrgnlTxRef>
+            <IntrBkSttlmAmt ccy="AXB">500000</IntrBkSttlmAmt>
+            <IntrBkSttlmDt>2012-12-13</IntrBkSttlmDt>
+            <SttlmInf>
+               <SttlmMtd>INGA</SttlmMtd>
+            </SttlmInf>
+            <Dbtr>
+               <Pty>
+                  <Nm>BINA Corp</Nm>
+                  <PstlAdr>
+                     <Ctry>CTRY-AXB</Ctry>
+                  </PstlAdr>
+               </Pty>
+            </Dbtr>
+            <DbtrAcct>
+               <Id>
+                  <Othr>
+                     <Id>A37856</Id>
+                  </Othr>
+               </Id>
+            </DbtrAcct>
+            <DbtrAgt>
+               <FinInstnId>
+                  <BICFI>ALPHA</BICFI>
+                  <Nm>Bank ALPHA</Nm>
+                  <PstlAdr>
+                     <Ctry>CTRY-AXB</Ctry>
+                  </PstlAdr>
+               </FinInstnId>
+            </DbtrAgt>
+            <CdtrAgt>
+               <FinInstnId>
+                  <BICFI>GAMMA</BICFI>
+                  <Nm>BANK GAMMA</Nm>
+                  <PstlAdr>
+                     <Ctry>CTRY-DJK</Ctry>
+                  </PstlAdr>
+               </FinInstnId>
+            </CdtrAgt>
+            <Cdtr>
+               <Pty>
+                  <Nm>PETROX Corp</Nm>
+                  <PstlAdr>
+                     <Ctry>CTRY-DJK</Ctry>
+                  </PstlAdr>
+               </Pty>
+            </Cdtr>
+            <CdtrAcct>
+               <Id>
+                  <IBAN>BG65893</IBAN>
+               </Id>
+            </CdtrAcct>
+         </OrgnlTxRef>
+      </TxInfAndSts>
+   </FIToFIPmtStsRpt>
+</Document>

@@ -1,0 +1,62 @@
+{
+    "Document": {
+        "@xmlns": "urn:iso:std:iso:20022:tech:xsd:pacs.008.001.09"
+    },
+    "GrpHdr": {
+        "MsgId": "987654321",
+        "CreDtTm": "2024-01-25T10:15:30",
+        "NbOfTxs": "1",
+        "SttlmInf_SttlmMtd": "CLRG",
+        "SttlmInf_SttlmAcct_Id_Othr_Id": "GB29XABC123456987654321"
+    },
+    "CdtTrfTxInf": {
+        "PmtId_InstrId": "INST123",
+        "PmtId_EndToEndId": "00001",
+        "PmtTpInf_SvcLvl_Cd": "SEPA",
+        "IntrBkSttlmAmt_@Ccy": "USD",
+        "IntrBkSttlmAmt_#text": "1000.00",
+        "IntrBkSttlmDt": "2024-01-25",
+        "SttlmInf_SttlmMtd": "CLRG",
+        "SttlmInf_SttlmAcct_Id_Othr_Id": "GB29XABC123456987654321",
+        "InstdAmt_@Ccy": "USD",
+        "InstdAmt_#text": "1000.00",
+        "XchgRate": "0.88",
+        "ChrgBr": "CRED",
+        "ChrgsInf_Amt_@Ccy": "USD",
+        "ChrgsInf_Amt_#text": "10.00",
+        "ChrgsInf_Agt_FinInstnId_BICFI": "DEUTDEFFXXX",
+        "ChrgsInf_Agt_FinInstnId_Nm": "Deutsche Bank",
+        "ChrgsInf_Agt_FinInstnId_PstlAdr": {
+            "StrtNm": "Taunusanlage 12",
+            "PstCd": "60325",
+            "TwnNm": "Frankfurt am Main",
+            "Ctry": "DE"
+        },
+        "UltmtDbtr_Nm": "Alice Doe",
+        "UltmtDbtr_Id_PrvtId_Othr_Id": "GB29XABC123456987654321",
+        "UltmtCdtr_Nm": "Bob Smith",
+        "UltmtCdtr_Id_OrgId_Othr_Id": "DE89370400440532013000",
+        "DbtrAcct_Nm": "Alice Doe",
+        "DbtrAcct_Id_Othr_Id": "GB29XABC123456987654321",
+        "DbtrAgt_FinInstnId_BICFI": "DEUTDEFFXXX",
+        "DbtrAgt_FinInstnId_Nm": "Deutsche Bank",
+        "CdtrAgt_FinInstnId_BICFI": "COBADEFFXXX",
+        "CdtrAgt_FinInstnId_Nm": "Commerzbank",
+        "DbtrAgtAcct_Id_Othr_Id": "DEUTDEFFXXX0123456789",
+        "CdtrAgtAcct_Id_Othr_Id": "COBADEFFXXX9876543210",
+        "RgltryRptg": {
+            "DbtCdtRptgInd": "CRED",
+            "Authrty": "EUROPEAN UNION",
+            "Dtls": "Transaction follows EU regulations"
+        },
+        "RltdRmtInf_RmtId": "REMITTANCEID123",
+        "RltdRmtInf_RmtLctnDtls_Mtd": "Email",
+        "RltdRmtInf_RmtLctnDtls_ElctrncAdr": "bob@example.com",
+        "RltdRmtInf_RmtLctnDtls_PstlAdr": {
+            "StrtNm": "Bob's Street",
+            "PstCd": "54321",
+            "TwnNm": "Bob's Town",
+            "Ctry": "Bob's Country"
+        }
+    }
+}
