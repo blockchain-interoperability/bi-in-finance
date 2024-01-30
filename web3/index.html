@@ -58,13 +58,16 @@
     <p id="accountArea" class="status">Connection Status: Not connected to Metamask</p>
 
     <button onclick="connectContract()">Connect to Contract</button> <br>
-    <p id="contractArea" class="status">Connection Status: Not connected to Smart Contract</p>
+    <p id="contractArea" class="status">Connection Status: Not connected to any Smart Contract</p>
 
-    <button onclick="readWord()">Get Data from Contract</button> <br>
+    <button onclick="readWord()">Get Data from Smart Contract</button> <br>
     <p id="dataArea" class="status">Data Status: No data from Smart Contract</p>
+    
+    <br><hr><br>
 
-    <button onclick="changeWord()">Change Data on the Smart Contract</button> <br>
-    <input type="text" id="inputArea" placeholder="Enter new data" autocomplete="off"> 
+    <!-- File input for uploading JSON file -->
+    <input type="file" id="jsonFileInput" accept=".json">
+    <button onclick="updateData()">Update Data on the Smart Contract</button> <br>
 
     <script>
         let account;
@@ -79,47 +82,55 @@
 
         const connectContract = async () => {
             const ABI = [
-                {
-                    "inputs": [
-                        {
-                            "internalType": "string",
-                            "name": "_word",
-                            "type": "string"
-                        }
-                    ],
-                    "name": "changeFlower",
-                    "outputs": [],
-                    "stateMutability": "nonpayable",
-                    "type": "function"
-                },
-                {
-                    "inputs": [],
-                    "name": "getFlower",
-                    "outputs": [
-                        {
-                            "internalType": "string",
-                            "name": "",
-                            "type": "string"
-                        }
-                    ],
-                    "stateMutability": "view",
-                    "type": "function"
-                }
-            ];
-            const Address = "0x4FC39a355E153af4B61D7C6c8C0682f4cd0EbA73";
+                            { "type": "constructor", "inputs": [], "stateMutability": "nonpayable" },
+                            {
+                            "type": "function",
+                            "name": "getPerson",
+                            "inputs": [],
+                            "outputs": [{ "name": "", "type": "string", "internalType": "string" }],
+                            "stateMutability": "view"
+                            },
+                            {
+                            "type": "function",
+                            "name": "updatePerson",
+                            "inputs": [
+                                {
+                                "name": "_data",
+                                "type": "tuple",
+                                "internalType": "struct ConnectToWeb3.Person",
+                                "components": [
+                                    { "name": "name", "type": "string", "internalType": "string" },
+                                    { "name": "age", "type": "uint256", "internalType": "uint256" },
+                                    { "name": "country", "type": "string", "internalType": "string" }
+                                ]
+                                }
+                            ],
+                            "outputs": [],
+                            "stateMutability": "nonpayable"
+                            }
+                        ];
+            const Address = "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318";
             window.web3 = await new Web3(window.ethereum);
             window.contract = await new window.web3.eth.Contract(ABI, Address);
             document.getElementById("contractArea").innerHTML = "Connection Status: Success";
         }
 
         const readWord = async () => {
-            const data = await window.contract.methods.getFlower().call();
-            document.getElementById("dataArea").innerHTML = `Word is: ${data}`;
+            const data = await window.contract.methods.getPerson().call();
+            document.getElementById("dataArea").innerHTML = `Fetched data : ${data}`;
         }
 
-        const changeWord = async () => {
-            const myEntry = document.getElementById("inputArea").value;
-            await window.contract.methods.changeFlower(myEntry).send({ from: account });
+        const updateData = async () => {
+            const fileInput = document.getElementById('jsonFileInput');
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.onload = async (event) => {
+                const jsonData = JSON.parse(event.target.result);
+                console.log("JSON Data:", jsonData);
+                await window.contract.methods.updatePerson(jsonData).send({ from: account });
+
+            };
+            reader.readAsText(file);
         }
     </script>
 </body>
