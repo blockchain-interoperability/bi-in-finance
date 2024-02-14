@@ -1,5 +1,15 @@
 import json
 import re
+from tkinter import filedialog
+import tkinter as tk
+import os
+
+def choose_file():
+    root = tk.Tk()
+    root.withdraw()
+    file_path = filedialog.askopenfilename(title="Choose file", filetypes=[("Json files", "*.json"), ("XML files", "*.xml"), ("XSD files", "*.xsd"), ("All files", "*.*")])
+    return file_path
+
 
 def collect_unique_struct_names(json_data, unique_structs):
     for key, value in json_data.items():
@@ -33,8 +43,14 @@ def write_structs_to_file(structs, filename):
         for struct in structs.values():
             f.write(struct + "\n")
 
+input_file_path = choose_file()
+if not input_file_path:
+    print("No file selected. Exiting.")
+    exit()
+
+
 # Read JSON data from file
-with open("global_pacs008_message.json", "r") as f:
+with open(input_file_path, "r") as f:
     json_data = json.load(f)
 
 # Collect unique struct names
@@ -46,5 +62,8 @@ structs = {}
 for struct_name in unique_structs:
     generate_struct(json_data['Document'], struct_name, structs)
 
+output_directory = os.path.dirname(input_file_path)
+out_file = os.path.join(output_directory, "global_struct_definitions.sol")
+
 # Write struct definitions to file
-write_structs_to_file(structs, "global_struct_definitions.sol")
+write_structs_to_file(structs, out_file)

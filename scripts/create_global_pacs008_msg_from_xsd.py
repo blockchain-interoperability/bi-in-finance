@@ -2,6 +2,16 @@ import xml.etree.ElementTree as ET
 from xml.dom import minidom
 import xmlschema
 import random
+from tkinter import filedialog
+import tkinter as tk
+import os
+
+
+def choose_xml_file():
+    root = tk.Tk()
+    root.withdraw()
+    file_path = filedialog.askopenfilename(title="Choose an XML file", filetypes=[("XML files", "*.xml"), ("XSD files", "*.xsd"), ("All files", "*.*")])
+    return file_path
 
 
 def generate_complex_data(schema_type):
@@ -98,10 +108,19 @@ def generate_xml_data(schema, root_element):
 
 
 # Load the XSD schema
-schema = xmlschema.XMLSchema('pacs.008.001.11.xsd')
+input_file_path = choose_xml_file()
+if not input_file_path:
+    print("No file selected. Exiting.")
+    exit()
+
+schema = xmlschema.XMLSchema(input_file_path)
 
 # Generate the XML data
 generated_xml_data = generate_xml_data(schema, 'Document')
 
+output_directory = os.path.dirname(input_file_path)
+out_file = os.path.join(output_directory, "global_pacs008_message.xml")
+
+
 # Write the XML data to a file
-write_xml_data_to_file(generated_xml_data, "global_pacs008_message.xml")
+write_xml_data_to_file(generated_xml_data, out_file)
