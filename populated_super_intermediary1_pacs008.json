@@ -13,12 +13,12 @@
                 },
                 "IntrBkSttlmDt": "2012-12-13",
                 "SttlmInf": {
-                    "SttlmMtd": "CLRG",
+                    "SttlmMtd": "INGA",
                     "SttlmAcct": {
                         "Id": {
                             "IBAN": "NOT_SPECIFIED",
                             "Othr": {
-                                "Id": "NOT_SPECIFIED",
+                                "Id": "BN987654",
                                 "SchmeNm": {
                                     "Cd": "NOT_SPECIFIED",
                                     "Prtry": "NOT_SPECIFIED"
@@ -372,7 +372,7 @@
                 },
                 "InstgAgt": {
                     "FinInstnId": {
-                        "BICFI": "ALPHA",
+                        "BICFI": "BETA",
                         "ClrSysMmbId": {
                             "ClrSysId": {
                                 "Cd": "NOT_SPECIFIED",
@@ -381,7 +381,7 @@
                             "MmbId": "NOT_SPECIFIED"
                         },
                         "LEI": "NOT_SPECIFIED",
-                        "Nm": "Bank ALPHA",
+                        "Nm": "BANK BETA",
                         "PstlAdr": {
                             "AdrTp": {
                                 "Cd": "NOT_SPECIFIED",
@@ -449,7 +449,7 @@
                 },
                 "InstdAgt": {
                     "FinInstnId": {
-                        "BICFI": "BETA",
+                        "BICFI": "THETA",
                         "ClrSysMmbId": {
                             "ClrSysId": {
                                 "Cd": "NOT_SPECIFIED",
@@ -458,7 +458,7 @@
                             "MmbId": "NOT_SPECIFIED"
                         },
                         "LEI": "NOT_SPECIFIED",
-                        "Nm": "BANK BETA",
+                        "Nm": "BANK THETA",
                         "PstlAdr": {
                             "AdrTp": {
                                 "Cd": "NOT_SPECIFIED",
@@ -481,7 +481,7 @@
                             "TwnLctnNm": "NOT_SPECIFIED",
                             "DstrctNm": "NOT_SPECIFIED",
                             "CtrySubDvsn": "NOT_SPECIFIED",
-                            "Ctry": "CTRY-AXB",
+                            "Ctry": "CTRY-DJK",
                             "AdrLine": "NOT_SPECIFIED"
                         },
                         "Othr": {
@@ -1015,83 +1015,6 @@
                 },
                 "InstgAgt": {
                     "FinInstnId": {
-                        "BICFI": "ALPHA",
-                        "ClrSysMmbId": {
-                            "ClrSysId": {
-                                "Cd": "NOT_SPECIFIED",
-                                "Prtry": "NOT_SPECIFIED"
-                            },
-                            "MmbId": "NOT_SPECIFIED"
-                        },
-                        "LEI": "NOT_SPECIFIED",
-                        "Nm": "Bank ALPHA",
-                        "PstlAdr": {
-                            "AdrTp": {
-                                "Cd": "NOT_SPECIFIED",
-                                "Prtry": {
-                                    "Id": "NOT_SPECIFIED",
-                                    "Issr": "NOT_SPECIFIED",
-                                    "SchmeNm": "NOT_SPECIFIED"
-                                }
-                            },
-                            "Dept": "NOT_SPECIFIED",
-                            "SubDept": "NOT_SPECIFIED",
-                            "StrtNm": "NOT_SPECIFIED",
-                            "BldgNb": "NOT_SPECIFIED",
-                            "BldgNm": "NOT_SPECIFIED",
-                            "Flr": "NOT_SPECIFIED",
-                            "PstBx": "NOT_SPECIFIED",
-                            "Room": "NOT_SPECIFIED",
-                            "PstCd": "NOT_SPECIFIED",
-                            "TwnNm": "NOT_SPECIFIED",
-                            "TwnLctnNm": "NOT_SPECIFIED",
-                            "DstrctNm": "NOT_SPECIFIED",
-                            "CtrySubDvsn": "NOT_SPECIFIED",
-                            "Ctry": "CTRY-AXB",
-                            "AdrLine": "NOT_SPECIFIED"
-                        },
-                        "Othr": {
-                            "Id": "NOT_SPECIFIED",
-                            "SchmeNm": {
-                                "Cd": "NOT_SPECIFIED",
-                                "Prtry": "NOT_SPECIFIED"
-                            },
-                            "Issr": "NOT_SPECIFIED"
-                        }
-                    },
-                    "BrnchId": {
-                        "Id": "NOT_SPECIFIED",
-                        "LEI": "NOT_SPECIFIED",
-                        "Nm": "NOT_SPECIFIED",
-                        "PstlAdr": {
-                            "AdrTp": {
-                                "Cd": "NOT_SPECIFIED",
-                                "Prtry": {
-                                    "Id": "NOT_SPECIFIED",
-                                    "Issr": "NOT_SPECIFIED",
-                                    "SchmeNm": "NOT_SPECIFIED"
-                                }
-                            },
-                            "Dept": "NOT_SPECIFIED",
-                            "SubDept": "NOT_SPECIFIED",
-                            "StrtNm": "NOT_SPECIFIED",
-                            "BldgNb": "NOT_SPECIFIED",
-                            "BldgNm": "NOT_SPECIFIED",
-                            "Flr": "NOT_SPECIFIED",
-                            "PstBx": "NOT_SPECIFIED",
-                            "Room": "NOT_SPECIFIED",
-                            "PstCd": "NOT_SPECIFIED",
-                            "TwnNm": "NOT_SPECIFIED",
-                            "TwnLctnNm": "NOT_SPECIFIED",
-                            "DstrctNm": "NOT_SPECIFIED",
-                            "CtrySubDvsn": "NOT_SPECIFIED",
-                            "Ctry": "NOT_SPECIFIED",
-                            "AdrLine": "NOT_SPECIFIED"
-                        }
-                    }
-                },
-                "InstdAgt": {
-                    "FinInstnId": {
                         "BICFI": "BETA",
                         "ClrSysMmbId": {
                             "ClrSysId": {
@@ -1167,7 +1090,7 @@
                         }
                     }
                 },
-                "IntrmyAgt1": {
+                "InstdAgt": {
                     "FinInstnId": {
                         "BICFI": "THETA",
                         "ClrSysMmbId": {
@@ -1202,6 +1125,83 @@
                             "DstrctNm": "NOT_SPECIFIED",
                             "CtrySubDvsn": "NOT_SPECIFIED",
                             "Ctry": "CTRY-DJK",
+                            "AdrLine": "NOT_SPECIFIED"
+                        },
+                        "Othr": {
+                            "Id": "NOT_SPECIFIED",
+                            "SchmeNm": {
+                                "Cd": "NOT_SPECIFIED",
+                                "Prtry": "NOT_SPECIFIED"
+                            },
+                            "Issr": "NOT_SPECIFIED"
+                        }
+                    },
+                    "BrnchId": {
+                        "Id": "NOT_SPECIFIED",
+                        "LEI": "NOT_SPECIFIED",
+                        "Nm": "NOT_SPECIFIED",
+                        "PstlAdr": {
+                            "AdrTp": {
+                                "Cd": "NOT_SPECIFIED",
+                                "Prtry": {
+                                    "Id": "NOT_SPECIFIED",
+                                    "Issr": "NOT_SPECIFIED",
+                                    "SchmeNm": "NOT_SPECIFIED"
+                                }
+                            },
+                            "Dept": "NOT_SPECIFIED",
+                            "SubDept": "NOT_SPECIFIED",
+                            "StrtNm": "NOT_SPECIFIED",
+                            "BldgNb": "NOT_SPECIFIED",
+                            "BldgNm": "NOT_SPECIFIED",
+                            "Flr": "NOT_SPECIFIED",
+                            "PstBx": "NOT_SPECIFIED",
+                            "Room": "NOT_SPECIFIED",
+                            "PstCd": "NOT_SPECIFIED",
+                            "TwnNm": "NOT_SPECIFIED",
+                            "TwnLctnNm": "NOT_SPECIFIED",
+                            "DstrctNm": "NOT_SPECIFIED",
+                            "CtrySubDvsn": "NOT_SPECIFIED",
+                            "Ctry": "NOT_SPECIFIED",
+                            "AdrLine": "NOT_SPECIFIED"
+                        }
+                    }
+                },
+                "IntrmyAgt1": {
+                    "FinInstnId": {
+                        "BICFI": "NOT_SPECIFIED",
+                        "ClrSysMmbId": {
+                            "ClrSysId": {
+                                "Cd": "NOT_SPECIFIED",
+                                "Prtry": "NOT_SPECIFIED"
+                            },
+                            "MmbId": "NOT_SPECIFIED"
+                        },
+                        "LEI": "NOT_SPECIFIED",
+                        "Nm": "NOT_SPECIFIED",
+                        "PstlAdr": {
+                            "AdrTp": {
+                                "Cd": "NOT_SPECIFIED",
+                                "Prtry": {
+                                    "Id": "NOT_SPECIFIED",
+                                    "Issr": "NOT_SPECIFIED",
+                                    "SchmeNm": "NOT_SPECIFIED"
+                                }
+                            },
+                            "Dept": "NOT_SPECIFIED",
+                            "SubDept": "NOT_SPECIFIED",
+                            "StrtNm": "NOT_SPECIFIED",
+                            "BldgNb": "NOT_SPECIFIED",
+                            "BldgNm": "NOT_SPECIFIED",
+                            "Flr": "NOT_SPECIFIED",
+                            "PstBx": "NOT_SPECIFIED",
+                            "Room": "NOT_SPECIFIED",
+                            "PstCd": "NOT_SPECIFIED",
+                            "TwnNm": "NOT_SPECIFIED",
+                            "TwnLctnNm": "NOT_SPECIFIED",
+                            "DstrctNm": "NOT_SPECIFIED",
+                            "CtrySubDvsn": "NOT_SPECIFIED",
+                            "Ctry": "NOT_SPECIFIED",
                             "AdrLine": "NOT_SPECIFIED"
                         },
                         "Othr": {

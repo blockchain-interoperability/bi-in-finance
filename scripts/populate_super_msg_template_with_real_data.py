@@ -10,14 +10,14 @@ def choose_file():
     return file_path
 
 
-def populate_template(template_data, pacs008_data):
+def populate_template(template_data, msg_data):
     populated_data = template_data.copy()
     
     for key, value in populated_data.items():
         if isinstance(value, dict):
-            populated_data[key] = populate_template(value, pacs008_data.get(key, {}))
-        elif value == 'NOT_SPECIFIED' and key in pacs008_data:
-            populated_data[key] = pacs008_data[key]
+            populated_data[key] = populate_template(value, msg_data.get(key, {}))
+        elif value == 'NOT_SPECIFIED' and key in msg_data:
+            populated_data[key] = msg_data[key]
     
     return populated_data
 
@@ -33,20 +33,20 @@ if not template_file_path:
 
 template_data = read_json(template_file_path)
 
-# Read example PACS008 data from file
-pacs008_file_path = choose_file()
-if not pacs008_file_path:
+# Read example msg data from file
+msg_file_path = choose_file()
+if not msg_file_path:
     print("No file selected. Exiting.")
     exit()
-pacs008_data = read_json(pacs008_file_path)
+msg_data = read_json(msg_file_path)
 
-# Populate the template with data from the example PACS008
-populated_data = populate_template(template_data, pacs008_data)
+# Populate the template with data from the example msg
+populated_data = populate_template(template_data, msg_data)
 
 
 # Write the populated JSON to a new file
 output_directory = os.path.dirname(template_file_path)
-output_file_path = os.path.join(output_directory, "populated_global_pacs008_message.json")
+output_file_path = os.path.join(output_directory, 'populated_super_' + os.path.splitext(os.path.basename(msg_file_path))[0] + '.json')
 
 with open(output_file_path, 'w') as output_file:
     json.dump(populated_data, output_file, indent=4)

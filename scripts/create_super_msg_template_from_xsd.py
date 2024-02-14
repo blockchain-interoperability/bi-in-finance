@@ -119,7 +119,7 @@ schema = xmlschema.XMLSchema(input_file_path)
 generated_xml_data = generate_xml_data(schema, 'Document')
 
 output_directory = os.path.dirname(input_file_path)
-out_file = os.path.join(output_directory, "global_pacs008_message.xml")
+out_file = os.path.join(output_directory, 'super_' + os.path.splitext(os.path.basename(input_file_path))[0] + '.xml')
 
 
 # Write the XML data to a file

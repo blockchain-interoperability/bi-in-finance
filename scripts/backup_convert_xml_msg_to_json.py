@@ -90,8 +90,6 @@ if __name__ == "__main__":
         print("No file selected. Exiting.")
         exit()
         
-    # xml_data_file = 'pacs008_example.xml'
-
     xml_data = read_xml_file(xml_data_file)
 
     dict_data = convert_xml_to_dict(xml_data)
