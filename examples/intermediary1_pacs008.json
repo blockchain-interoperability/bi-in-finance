@@ -1,46 +1,120 @@
 {
-    "GrpHdr": {
-        "MsgId": "to-be-generated",
-        "CreDtTm": "2012-12-13T12:12:12",
-        "NbOfTxs": "1",
-        "CtrlSum": "1300000",
-        "TtlIntrBkSttlmAmt_@Ccy": "AXB",
-        "TtlIntrBkSttlmAmt_#text": "500000",
-        "IntrBkSttlmDt": "2012-12-13",
-        "SttlmInf_SttlmMtd": "INGA",
-        "SttlmInf_SttlmAcct_Id_Othr_Id": "BN987654",
-        "InstgAgt_FinInstnId_BICFI": "BETA",
-        "InstgAgt_FinInstnId_Nm": "BANK BETA",
-        "InstgAgt_FinInstnId_PstlAdr_Ctry": "CTRY-AXB",
-        "InstdAgt_FinInstnId_BICFI": "THETA",
-        "InstdAgt_FinInstnId_Nm": "BANK THETA",
-        "InstdAgt_FinInstnId_PstlAdr_Ctry": "CTRY-DJK"
-    },
-    "CdtTrfTxInf": {
-        "PmtId_UETR": "to-be-generated",
-        "IntrBkSttlmAmt_@Ccy": "AXB",
-        "IntrBkSttlmAmt_#text": "500000",
-        "IntrBkSttlmDt": "2012-12-13",
-        "InstdAmt_@Ccy": "DJK",
-        "InstdAmt_#text": "300000",
-        "XchgRate": "0.6",
-        "InstgAgt_FinInstnId_BICFI": "BETA",
-        "InstgAgt_FinInstnId_Nm": "BANK BETA",
-        "InstgAgt_FinInstnId_PstlAdr_Ctry": "CTRY-AXB",
-        "InstdAgt_FinInstnId_BICFI": "THETA",
-        "InstdAgt_FinInstnId_Nm": "BANK THETA",
-        "InstdAgt_FinInstnId_PstlAdr_Ctry": "CTRY-DJK",
-        "Dbtr_Nm": "BINA Corp",
-        "Dbtr_PstlAdr_Ctry": "CTRY-AXB",
-        "DbtrAcct_Id_Othr_Id": "A37856",
-        "DbtrAgt_FinInstnId_BICFI": "ALPHA",
-        "DbtrAgt_FinInstnId_Nm": "Bank ALPHA",
-        "DbtrAgt_FinInstnId_PstlAdr_Ctry": "CTRY-AXB",
-        "CdtrAgt_FinInstnId_BICFI": "GAMMA",
-        "CdtrAgt_FinInstnId_Nm": "BANK GAMMA",
-        "CdtrAgt_FinInstnId_PstlAdr_Ctry": "CTRY-DJK",
-        "Cdtr_Nm": "PETROX Corp",
-        "Cdtr_PstlAdr_Ctry": "CTRY-DJK",
-        "CdtrAcct_Id_IBAN": "BG65893"
+    "Document": {
+        "FIToFICstmrCdtTrf": {
+            "GrpHdr": {
+                "MsgId": "to-be-generated",
+                "CreDtTm": "2012-12-13T12:12:12",
+                "NbOfTxs": "1",
+                "CtrlSum": "1300000",
+                "TtlIntrBkSttlmAmt": {
+                    "@Ccy": "AXB",
+                    "#text": "500000"
+                },
+                "IntrBkSttlmDt": "2012-12-13",
+                "SttlmInf": {
+                    "SttlmMtd": "INGA",
+                    "SttlmAcct": {
+                        "Id": {
+                            "Othr": {
+                                "Id": "BN987654"
+                            }
+                        }
+                    }
+                },
+                "InstgAgt": {
+                    "FinInstnId": {
+                        "BICFI": "BETA",
+                        "Nm": "BANK BETA",
+                        "PstlAdr": {
+                            "Ctry": "CTRY-AXB"
+                        }
+                    }
+                },
+                "InstdAgt": {
+                    "FinInstnId": {
+                        "BICFI": "THETA",
+                        "Nm": "BANK THETA",
+                        "PstlAdr": {
+                            "Ctry": "CTRY-DJK"
+                        }
+                    }
+                }
+            },
+            "CdtTrfTxInf": {
+                "PmtId": {
+                    "UETR": "to-be-generated"
+                },
+                "IntrBkSttlmAmt": {
+                    "@Ccy": "AXB",
+                    "#text": "500000"
+                },
+                "IntrBkSttlmDt": "2012-12-13",
+                "InstdAmt": {
+                    "@Ccy": "DJK",
+                    "#text": "300000"
+                },
+                "XchgRate": "0.6",
+                "InstgAgt": {
+                    "FinInstnId": {
+                        "BICFI": "BETA",
+                        "Nm": "BANK BETA",
+                        "PstlAdr": {
+                            "Ctry": "CTRY-AXB"
+                        }
+                    }
+                },
+                "InstdAgt": {
+                    "FinInstnId": {
+                        "BICFI": "THETA",
+                        "Nm": "BANK THETA",
+                        "PstlAdr": {
+                            "Ctry": "CTRY-DJK"
+                        }
+                    }
+                },
+                "Dbtr": {
+                    "Nm": "BINA Corp",
+                    "PstlAdr": {
+                        "Ctry": "CTRY-AXB"
+                    }
+                },
+                "DbtrAcct": {
+                    "Id": {
+                        "Othr": {
+                            "Id": "A37856"
+                        }
+                    }
+                },
+                "DbtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": "ALPHA",
+                        "Nm": "Bank ALPHA",
+                        "PstlAdr": {
+                            "Ctry": "CTRY-AXB"
+                        }
+                    }
+                },
+                "CdtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": "GAMMA",
+                        "Nm": "BANK GAMMA",
+                        "PstlAdr": {
+                            "Ctry": "CTRY-DJK"
+                        }
+                    }
+                },
+                "Cdtr": {
+                    "Nm": "PETROX Corp",
+                    "PstlAdr": {
+                        "Ctry": "CTRY-DJK"
+                    }
+                },
+                "CdtrAcct": {
+                    "Id": {
+                        "IBAN": "BG65893"
+                    }
+                }
+            }
+        }
     }
 }

@@ -96,18 +96,18 @@ if __name__ == "__main__":
 
     dict_data = convert_xml_to_dict(xml_data)
 
-    flattened_dict = flatten_dict(dict_data)
+    # flattened_dict = flatten_dict(dict_data)
 
     # If there are more than N keys with the same 
     # LONG parent name, then merge them into a dictionary
-    N = 2
-    merged_dict = merge_keys(flattened_dict, N)
+    # N = 2
+    # merged_dict = merge_keys(flattened_dict, N)
 
-    final_dict = group_data_by_prefix(merged_dict)
+    # final_dict = group_data_by_prefix(merged_dict)
 
 
     # Converting the final dictionary to JSON
-    json_data = json.dumps(final_dict, indent=4)
+    json_data = json.dumps(dict_data, indent=4)
 
     # json_out_file = os.path.splitext(xml_data_file)[0] + '.json'
 

@@ -109,7 +109,7 @@
                             "stateMutability": "nonpayable"
                             }
                         ];
-            const Address = "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318";
+            const Address = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
             window.web3 = await new Web3(window.ethereum);
             window.contract = await new window.web3.eth.Contract(ABI, Address);
             document.getElementById("contractArea").innerHTML = "Connection Status: Success";

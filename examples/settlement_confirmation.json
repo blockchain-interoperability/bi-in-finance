@@ -1,37 +1,93 @@
 {
-    "GrpHdr": {
-        "MsgId": "to-be-generated",
-        "CreDtTm": "to-be-generated",
-        "InstgAgt_FinInstnId_BICFI": "BETA",
-        "InstgAgt_FinInstnId_Nm": "BANK BETA",
-        "InstgAgt_FinInstnId_PstlAdr_Ctry": "CTRY-AXB",
-        "InstdAgt_FinInstnId_BICFI": "THETA",
-        "InstdAgt_FinInstnId_Nm": "BANK THETA",
-        "InstdAgt_FinInstnId_PstlAdr_Ctry": "CTRY-DJK"
-    },
-    "OrgnlGrpInfAndSts": {
-        "OrgnlMsgId": "populate from beta-theta pacs.008",
-        "OrgnlMsgNmId": "pacs.008.001.10",
-        "OrgnlCreDtTm": "2012-12-13T12:12:12"
-    },
-    "TxInfAndSts": {
-        "OrgnlUETR": "populate from beta-theta pacs.008",
-        "TxSts": "ACCC",
-        "OrgnlTxRef_IntrBkSttlmAmt_@ccy": "AXB",
-        "OrgnlTxRef_IntrBkSttlmAmt_#text": "500000",
-        "OrgnlTxRef_IntrBkSttlmDt": "2012-12-13",
-        "OrgnlTxRef_SttlmInf_SttlmMtd": "INGA",
-        "OrgnlTxRef_Dbtr_Pty_Nm": "BINA Corp",
-        "OrgnlTxRef_Dbtr_Pty_PstlAdr_Ctry": "CTRY-AXB",
-        "OrgnlTxRef_DbtrAcct_Id_Othr_Id": "A37856",
-        "OrgnlTxRef_DbtrAgt_FinInstnId_BICFI": "ALPHA",
-        "OrgnlTxRef_DbtrAgt_FinInstnId_Nm": "Bank ALPHA",
-        "OrgnlTxRef_DbtrAgt_FinInstnId_PstlAdr_Ctry": "CTRY-AXB",
-        "OrgnlTxRef_CdtrAgt_FinInstnId_BICFI": "GAMMA",
-        "OrgnlTxRef_CdtrAgt_FinInstnId_Nm": "BANK GAMMA",
-        "OrgnlTxRef_CdtrAgt_FinInstnId_PstlAdr_Ctry": "CTRY-DJK",
-        "OrgnlTxRef_Cdtr_Pty_Nm": "PETROX Corp",
-        "OrgnlTxRef_Cdtr_Pty_PstlAdr_Ctry": "CTRY-DJK",
-        "OrgnlTxRef_CdtrAcct_Id_IBAN": "BG65893"
+    "Document": {
+        "FIToFIPmtStsRpt": {
+            "GrpHdr": {
+                "MsgId": "to-be-generated",
+                "CreDtTm": "to-be-generated",
+                "InstgAgt": {
+                    "FinInstnId": {
+                        "BICFI": "BETA",
+                        "Nm": "BANK BETA",
+                        "PstlAdr": {
+                            "Ctry": "CTRY-AXB"
+                        }
+                    }
+                },
+                "InstdAgt": {
+                    "FinInstnId": {
+                        "BICFI": "THETA",
+                        "Nm": "BANK THETA",
+                        "PstlAdr": {
+                            "Ctry": "CTRY-DJK"
+                        }
+                    }
+                }
+            },
+            "OrgnlGrpInfAndSts": {
+                "OrgnlMsgId": "populate from beta-theta pacs.008",
+                "OrgnlMsgNmId": "pacs.008.001.10",
+                "OrgnlCreDtTm": "2012-12-13T12:12:12"
+            },
+            "TxInfAndSts": {
+                "OrgnlUETR": "populate from beta-theta pacs.008",
+                "TxSts": "ACCC",
+                "OrgnlTxRef": {
+                    "IntrBkSttlmAmt": {
+                        "@ccy": "AXB",
+                        "#text": "500000"
+                    },
+                    "IntrBkSttlmDt": "2012-12-13",
+                    "SttlmInf": {
+                        "SttlmMtd": "INGA"
+                    },
+                    "Dbtr": {
+                        "Pty": {
+                            "Nm": "BINA Corp",
+                            "PstlAdr": {
+                                "Ctry": "CTRY-AXB"
+                            }
+                        }
+                    },
+                    "DbtrAcct": {
+                        "Id": {
+                            "Othr": {
+                                "Id": "A37856"
+                            }
+                        }
+                    },
+                    "DbtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": "ALPHA",
+                            "Nm": "Bank ALPHA",
+                            "PstlAdr": {
+                                "Ctry": "CTRY-AXB"
+                            }
+                        }
+                    },
+                    "CdtrAgt": {
+                        "FinInstnId": {
+                            "BICFI": "GAMMA",
+                            "Nm": "BANK GAMMA",
+                            "PstlAdr": {
+                                "Ctry": "CTRY-DJK"
+                            }
+                        }
+                    },
+                    "Cdtr": {
+                        "Pty": {
+                            "Nm": "PETROX Corp",
+                            "PstlAdr": {
+                                "Ctry": "CTRY-DJK"
+                            }
+                        }
+                    },
+                    "CdtrAcct": {
+                        "Id": {
+                            "IBAN": "BG65893"
+                        }
+                    }
+                }
+            }
+        }
     }
 }
