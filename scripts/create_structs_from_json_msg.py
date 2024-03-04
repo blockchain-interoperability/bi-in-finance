@@ -34,7 +34,7 @@ def generate_struct(json_data, struct_name, structs):
         else:
             struct_def += f"    string {sanitize_variable_name(key)};\n"  # Remove special symbols
     
-    struct_def += "};\n"
+    struct_def += "}\n"
     
     return struct_def
 
