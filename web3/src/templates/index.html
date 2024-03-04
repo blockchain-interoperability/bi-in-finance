@@ -56,9 +56,6 @@
 
 <h1>Smart Contract Test</h1>
 
-<button onclick="connectMetamask()">Connect to Metamask</button> <br>
-<p id="accountArea" class="status">Connection Status: Not connected to Metamask</p>
-
 <button onclick="connectContract()">Connect to Smart Contract</button> <br>
 <p id="contractArea" class="status">Connection Status: Not connected to any Smart Contract</p>
 
@@ -85,7 +82,7 @@
     }
 
     async function readWord() {
-        const response = await fetch('/read_word');
+        const response = await fetch('/read_data');
         const data = await response.text();
         document.getElementById("dataArea").innerHTML = data;
     }

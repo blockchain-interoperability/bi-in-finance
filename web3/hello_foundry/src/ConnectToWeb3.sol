@@ -3,16 +3,23 @@ pragma solidity ^0.8.0;
 
 contract ConnectToWeb3 {
 
+    struct Name
+    {
+        string first;
+        string last;
+    }
     struct Person {
-        string name;
+        Name name;
         uint256 age;
         string country;
     }
     
     Person internal person;
+    Name internal name;
 
     constructor() {
-        person = Person("John Doe", 30, "Unknown");
+        name = Name("John", "Doe");
+        person = Person(name, 30, "Unknown");
     }
 
 
@@ -38,7 +45,7 @@ contract ConnectToWeb3 {
     function getPerson() external view returns (string memory) {
         string memory json = string(
             abi.encodePacked(
-                '{"name":"', person.name, '","age":', 
+                '{"name":"', person.name.first, " ", person.name.last, '","age":', 
                 uintToString(person.age), ',"country":"', 
                 person.country, '"}'
             )

@@ -1,5 +1,9 @@
 {
-    "name": "mridul",
+    "name": 
+        {
+            "first": "adsgfdgf ahmed",
+            "last": "mridul"
+        },
     "age": 29,
     "country": "BD"
 }
