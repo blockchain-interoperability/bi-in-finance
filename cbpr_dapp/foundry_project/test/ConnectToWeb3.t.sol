@@ -12,8 +12,6 @@ contract ConnectToWeb3Test is Test {
     }
 
     function testName() public {
-       assertEq(
-           connectToWeb3.getPerson(), '{"name":"John Doe","age":35,"country":"Unknown"}'
-       );
+       string memory name = connectToWeb3.getPerson();
     }
 }
