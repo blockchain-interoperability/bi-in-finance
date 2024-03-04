@@ -1,7 +1,7 @@
 import json
 
 def get_contract_abi(file_name, contract_name):
-    contract_file_path = '../hello_foundry/out/'+file_name+'.sol/'+contract_name+'.json'
+    contract_file_path = '../foundry_project/out/'+file_name+'.sol/'+contract_name+'.json'
     try:
         with open(contract_file_path, 'r') as file:
             data = json.load(file)
