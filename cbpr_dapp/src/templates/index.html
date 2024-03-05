@@ -135,7 +135,9 @@
                     messages['interm1-area'].summary = data.interm1_summary;
                     messages['interm2-area'].fullMessage = data.interm2_full_message;
                     messages['interm2-area'].summary = data.interm2_summary;
-                    
+                    messages['creditor-area'].fullMessage = data.creditor_full_message;
+                    messages['creditor-area'].summary = data.creditor_summary;
+
                     setTimeout(function () {
                         document.getElementById("arrow1").style.visibility = "visible";
                     }, 1000);
@@ -151,7 +153,15 @@
 
                     setTimeout(function () {
                         document.getElementById('interm2-area').value = messages['interm2-area'].summary;
-                    }, 4000);                       
+                    }, 4000);     
+                    
+                    setTimeout(function () {
+                        document.getElementById("arrow3").style.visibility = "visible";
+                    }, 5000);
+
+                    setTimeout(function () {
+                        document.getElementById('creditor-area').value = messages['creditor-area'].summary;
+                    }, 6000);  
 
                 } catch (error) {
                     console.error('Error fetching the file content:', error);

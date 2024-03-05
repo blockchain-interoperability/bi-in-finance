@@ -25,22 +25,31 @@ def get_summary(xml_data):
     creditor = data["Document"]["FIToFICstmrCdtTrf"]["CdtTrfTxInf"]["Cdtr"]["Nm"]
     creditor_account = data["Document"]["FIToFICstmrCdtTrf"]["CdtTrfTxInf"]["CdtrAcct"]["Id"]["IBAN"]
     creditor_agent = data["Document"]["FIToFICstmrCdtTrf"]["CdtTrfTxInf"]["CdtrAgt"]["FinInstnId"]["Nm"]
-    control_sum = data["Document"]["FIToFICstmrCdtTrf"]["GrpHdr"]["CtrlSum"]
+    intr_bank_sttlm_amount = data["Document"]["FIToFICstmrCdtTrf"]["CdtTrfTxInf"]["IntrBkSttlmAmt"]
     settlelment_method = data["Document"]["FIToFICstmrCdtTrf"]["GrpHdr"]["SttlmInf"]["SttlmMtd"]
+    settlement_account = data.get("Document", {}).get("FIToFICstmrCdtTrf", {}).get("GrpHdr", {}).get("SttlmInf", {}).get("SttlmAcct", {}).get("Id", {}).get("Othr", {}).get("Id", '')
+    transfer_amount = data["Document"]["FIToFICstmrCdtTrf"]["CdtTrfTxInf"]["InstdAmt"]
+    xchange_rate = data["Document"]["FIToFICstmrCdtTrf"]["CdtTrfTxInf"]["XchgRate"]
     current_institution = data["Document"]["FIToFICstmrCdtTrf"]["GrpHdr"]["InstgAgt"]["FinInstnId"]["Nm"]
     next_institution = data["Document"]["FIToFICstmrCdtTrf"]["GrpHdr"]["InstdAgt"]["FinInstnId"]["Nm"]
+
 
     info_string = f"Debtor: {debtor}\n"
     info_string += f"Debtor Account: {debtor_account}\n"
     info_string += f"Debtor Agent: {debtor_agent}\n\n"
+
     info_string += f"Creditor: {creditor}\n"
     info_string += f"Creditor Account: {creditor_account}\n"
     info_string += f"Creditor Agent: {creditor_agent}\n\n"
-    info_string += f"Control Sum: {control_sum}\n"
-    info_string += f"Settlement Method: {settlelment_method}\n\n"
+
+    info_string += f"Inter Bank Settlement Amount: {intr_bank_sttlm_amount}\n"
+    info_string += f"Settlement Method: {settlelment_method}\n"
+    info_string += f"Settlement Account: {settlement_account}\n\n"
+    
+    info_string += f"Transfer Amount: {transfer_amount}\n"
+    info_string += f"Exchange Rate: {xchange_rate}\n\n"
+
     info_string += f"Current Institution: {current_institution}\n"
     info_string += f"Next Institution: {next_institution}"
-
-    
 
     return info_string

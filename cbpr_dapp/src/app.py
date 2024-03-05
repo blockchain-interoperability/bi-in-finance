@@ -44,15 +44,16 @@ def make_transaction():
     if not iso_message:
         return jsonify({'error': 'No ISO Message'}), 400
     
-    print(iso_message)
-
     iso_message_interm1 = iso_message
     iso_message_interm2 = iso_message
+    iso_message_creditor = iso_message
 
     messages = jsonify({'interm1_full_message': iso_message_interm1, 
         'interm1_summary': util.get_summary(iso_message_interm1),
         'interm2_full_message': iso_message_interm2, 
-        'interm2_summary': util.get_summary(iso_message_interm2)
+        'interm2_summary': util.get_summary(iso_message_interm2),
+        'creditor_full_message': iso_message_creditor, 
+        'creditor_summary': util.get_summary(iso_message_creditor)
     })
 
     return messages, 200
