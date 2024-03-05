@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMART CONTRACT TEST</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 18px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        input[type=text] {
+            width: 40%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            font-size: 18px;
+        }
+
+        .status {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+    </style>
+
+
+</head>
+<body>
+
+<h1>Smart Contract Test</h1>
+
+<button onclick="connectContract()">Connect to Smart Contract</button> <br>
+<p id="contractArea" class="status">Connection Status: Not connected to any Smart Contract</p>
+
+<button onclick="readWord()">Get Data from Smart Contract</button> <br>
+<p id="dataArea" class="status">Data Status: No data from Smart Contract</p>
+
+<br><hr><br>
+
+<!-- File input for uploading JSON file -->
+<input type="file" id="jsonFileInput" accept=".json">
+<button onclick="updateData()">Update Data on the Smart Contract</button> <br>
+
+<script>
+    async function connectMetamask() {
+        const response = await fetch('/connect_metamask');
+        const data = await response.text();
+        document.getElementById("accountArea").innerHTML = data;
+    }
+
+    async function connectContract() {
+        const response = await fetch('/connect_contract');
+        const data = await response.text();
+        document.getElementById("contractArea").innerHTML = data;
+    }
+
+    async function readWord() {
+        const response = await fetch('/read_data');
+        const data = await response.text();
+        document.getElementById("dataArea").innerHTML = data;
+    }
+
+    async function updateData() {
+        const fileInput = document.getElementById('jsonFileInput');
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+            const jsonData = JSON.parse(event.target.result);
+            const response = await fetch('/update_data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(jsonData)
+            });
+            const data = await response.text();
+            console.log(data);
+        };
+        reader.readAsText(file);
+    }
+</script>
+
+</body>
+</html>
