@@ -20,30 +20,30 @@
     </header>
 
     <div class="transact-container">
-        <button class="transact-btn">Transact</button>
+        <button class="transact-btn" onclick="makeTransaction()">Transact</button>
     </div>
 
     <main>
         <section class="content-box">
-            <div class="title-bar">Debtor Bank</div>
+            <div class="title-bar">Debtor Agent</div>
             <textarea class="content-space" id="debtor-area"></textarea>
             <button class="section-btn" onclick="toggleMessage('debtor-area')">Show full message</button>
         </section>
-        <div class="arrow hidden" id="arrow1">→</div>
+        <div class="arrow hidden" id="arrow1"></div>
         <section class="content-box">
             <div class="title-bar">Intermediary 1</div>
             <textarea class="content-space" id="interm1-area"></textarea>
             <button class="section-btn" onclick="toggleMessage('interm1-area')">Show full message</button>
         </section>
-        <div class="arrow hidden" id="arrow2">→</div>
+        <div class="arrow hidden" id="arrow2"></div>
         <section class="content-box">
             <div class="title-bar">Intermediary 2</div>
             <textarea class="content-space" id="interm2-area"></textarea>
             <button class="section-btn" onclick="toggleMessage('interm2-area')">Show full message</button>
         </section>
-        <div class="arrow hidden" id="arrow3">→</div>
+        <div class="arrow hidden" id="arrow3"></div>
         <section class="content-box">
-            <div class="title-bar">Creditor Bank</div>
+            <div class="title-bar">Creditor Agent</div>
             <textarea class="content-space" id="creditor-area"></textarea>
             <button class="section-btn" onclick="toggleMessage('creditor-area')">Show full message</button>
         </section>
@@ -64,10 +64,29 @@
             'creditor-area': { fullMessage: '', summary: '' }
         };
 
+        function initializeMessages() {
+            messages = {
+                'debtor-area': { fullMessage: '', summary: '' },
+                'interm1-area': { fullMessage: '', summary: '' },
+                'interm2-area': { fullMessage: '', summary: '' },
+                'creditor-area': { fullMessage: '', summary: '' }
+            };
+
+            document.getElementById("arrow1").style.visibility = "hidden";
+            document.getElementById("arrow2").style.visibility = "hidden";
+            document.getElementById("arrow3").style.visibility = "hidden";
+
+            document.getElementById('debtor-area').value = messages['debtor-area'].summary;
+            document.getElementById('interm1-area').value = messages['interm1-area'].summary;
+            document.getElementById('interm2-area').value = messages['interm2-area'].summary;
+            document.getElementById('creditor-area').value = messages['creditor-area'].summary;
+        }
+
         async function uploadMsgFile() {
+
+            initializeMessages();
+
             const fileInput = document.getElementById('isoInput');
-            const textArea = document.getElementById('debtor-area');
-            const button = document.querySelector('.debtor-full-msg-btn');
 
             if (fileInput.files.length > 0) {
                 const file = fileInput.files[0];
@@ -87,9 +106,8 @@
                     const data = await response.json();
                     messages['debtor-area'].fullMessage = data.full_message;
                     messages['debtor-area'].summary = data.summary
-                    
-                    textArea.value = messages['debtor-area'].summary;
 
+                    document.getElementById('debtor-area').value = messages['debtor-area'].summary;
                     
                 } catch (error) {
                     console.error('Error fetching the file content:', error);
@@ -98,6 +116,49 @@
                 console.log('No file selected');
             }
         }
+
+        async function makeTransaction() {
+
+            if (messages['debtor-area'].fullMessage.length > 0) {
+                try {
+                    const response = await fetch('/make_transaction', {
+                        method: 'POST',
+                        body: JSON.stringify({iso_message: messages['debtor-area'].fullMessage}),
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    messages['interm1-area'].fullMessage = data.interm1_full_message;
+                    messages['interm1-area'].summary = data.interm1_summary;
+                    messages['interm2-area'].fullMessage = data.interm2_full_message;
+                    messages['interm2-area'].summary = data.interm2_summary;
+                    
+                    setTimeout(function () {
+                        document.getElementById("arrow1").style.visibility = "visible";
+                    }, 1000);
+
+                    setTimeout(function () {
+                        document.getElementById('interm1-area').value = messages['interm1-area'].summary;
+                    }, 2000);
+                    
+
+                    setTimeout(function () {
+                        document.getElementById("arrow2").style.visibility = "visible";
+                    }, 3000);
+
+                    setTimeout(function () {
+                        document.getElementById('interm2-area').value = messages['interm2-area'].summary;
+                    }, 4000);                       
+
+                } catch (error) {
+                    console.error('Error fetching the file content:', error);
+                }
+            }
+        }
+
 
         function toggleMessage(id) {
             const textArea = document.getElementById(id);
@@ -111,20 +172,6 @@
                 button.textContent = 'Show full message';
             }
         }
-
-
-
-        document
-            .querySelector(".transact-btn")
-            .addEventListener("click", function () {
-                document.getElementById("arrow1").style.visibility = "visible";
-                setTimeout(function () {
-                    document.getElementById("arrow2").style.visibility = "visible";
-                }, 1000);
-                setTimeout(function () {
-                    document.getElementById("arrow3").style.visibility = "visible";
-                }, 2000);
-            });
     </script>
 </body>
 

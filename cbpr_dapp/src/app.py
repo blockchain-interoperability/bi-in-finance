@@ -31,13 +31,32 @@ def upload_msg_file():
     
     if file:
         content = file.read().decode('utf-8')
-        
-        summary = util.get_summary(content)
-        # summary = "dummy"
-
-        return jsonify({'full_message': content, 'summary': summary}), 200
+        return jsonify({'full_message': content, 'summary': util.get_summary(content)}), 200
     else:
         return jsonify({'error': 'File not processed'}), 400
+
+
+@app.route('/make_transaction', methods=['POST'])
+def make_transaction():
+    data = request.get_json(force=True)
+    iso_message = data.get('iso_message')
+    
+    if not iso_message:
+        return jsonify({'error': 'No ISO Message'}), 400
+    
+    print(iso_message)
+
+    iso_message_interm1 = iso_message
+    iso_message_interm2 = iso_message
+
+    messages = jsonify({'interm1_full_message': iso_message_interm1, 
+        'interm1_summary': util.get_summary(iso_message_interm1),
+        'interm2_full_message': iso_message_interm2, 
+        'interm2_summary': util.get_summary(iso_message_interm2)
+    })
+
+    return messages, 200
+
 
 
 
