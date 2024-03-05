@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from web3 import Web3
 import util
 import json
@@ -17,6 +17,28 @@ contract = web3.eth.contract(address=ADDRESS, abi=ABI)
 @app.route('/')
 def index():
     return render_template('index.html')
+
+
+@app.route('/upload_msg_file', methods=['POST'])
+def upload_msg_file():
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part'}), 400
+    
+    file = request.files['file']
+    
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+    
+    if file:
+        content = file.read().decode('utf-8')
+        
+        summary = util.get_summary(content)
+        # summary = "dummy"
+
+        return jsonify({'full_message': content, 'summary': summary}), 200
+    else:
+        return jsonify({'error': 'File not processed'}), 400
+
 
 
 @app.route('/connect_contract')

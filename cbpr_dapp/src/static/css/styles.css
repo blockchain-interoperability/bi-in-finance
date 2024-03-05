@@ -89,15 +89,6 @@ main {
   display: flex;
   flex-direction: column;
 }
-.content-box::after {
-  content: '→';
-  position: absolute;
-  right: -20px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 20px;
-  color: #333;
-}
 
 .title-bar {
   background: #c2d7ed;

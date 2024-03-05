@@ -1,73 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CBPR Project</title>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/styles.css') }}"
-    />
-  </head>
-  <body>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+</head>
+
+<body>
     <header>
-      <h1>CBPR+ : Transaction for pacs.008</h1>
-      <hr />
-      <div class="file-upload-container">
-        <h3>Choose ISO Message :</h3>
-        <input type="file" id="fileInput" />
-        <button class="upload-btn">Upload</button>
-      </div>
+        <h1>CBPR+ : Transaction for pacs.008</h1>
+        <hr />
+        <div class="file-upload-container">
+            <h3>Choose ISO Message :</h3>
+            <input type="file" id="isoInput" accept=".xml"/>
+            <button class="upload-btn" onclick="uploadMsgFile()">Upload</button>
+        </div>
     </header>
 
     <div class="transact-container">
-      <button class="transact-btn">Transact</button>
+        <button class="transact-btn">Transact</button>
     </div>
 
     <main>
-      <section class="content-box">
-        <div class="title-bar">Debtor Bank</div>
-        <textarea class="content-space"></textarea>
-        <button class="section-btn">See full message</button>
-      </section>
-      <div class="arrow hidden" id="arrow1">→</div>
-      <section class="content-box">
-        <div class="title-bar">Intermediary 1</div>
-        <textarea class="content-space"></textarea>
-        <button class="section-btn">See full message</button>
-      </section>
-      <div class="arrow hidden" id="arrow2">→</div>
-      <section class="content-box">
-        <div class="title-bar">Intermediary 2</div>
-        <textarea class="content-space"></textarea>
-        <button class="section-btn">See full message</button>
-      </section>
-      <div class="arrow hidden" id="arrow3">→</div>
-      <section class="content-box">
-        <div class="title-bar">Creditor Bank</div>
-        <textarea class="content-space"></textarea>
-        <button class="section-btn">See full message</button>
-      </section>
+        <section class="content-box">
+            <div class="title-bar">Debtor Bank</div>
+            <textarea class="content-space" id="debtor-area"></textarea>
+            <button class="section-btn" onclick="toggleMessage('debtor-area')">Show full message</button>
+        </section>
+        <div class="arrow hidden" id="arrow1">→</div>
+        <section class="content-box">
+            <div class="title-bar">Intermediary 1</div>
+            <textarea class="content-space" id="interm1-area"></textarea>
+            <button class="section-btn" onclick="toggleMessage('interm1-area')">Show full message</button>
+        </section>
+        <div class="arrow hidden" id="arrow2">→</div>
+        <section class="content-box">
+            <div class="title-bar">Intermediary 2</div>
+            <textarea class="content-space" id="interm2-area"></textarea>
+            <button class="section-btn" onclick="toggleMessage('interm2-area')">Show full message</button>
+        </section>
+        <div class="arrow hidden" id="arrow3">→</div>
+        <section class="content-box">
+            <div class="title-bar">Creditor Bank</div>
+            <textarea class="content-space" id="creditor-area"></textarea>
+            <button class="section-btn" onclick="toggleMessage('creditor-area')">Show full message</button>
+        </section>
     </main>
 
     <footer>
-      <button class="info-btn">Get Debtor-Creditor Information</button>
-      <textarea class="footer-textbox"></textarea>
-      <div class="ending">BRAINS Research Group</div>
+        <button class="info-btn">Get Debtor-Creditor Information</button>
+        <textarea class="footer-textbox"></textarea>
+        <div class="ending">BRAINS Research Group</div>
     </footer>
 
     <script>
-      document
-        .querySelector(".transact-btn")
-        .addEventListener("click", function () {
-          document.getElementById("arrow1").style.visibility = "visible";
-          setTimeout(function () {
-            document.getElementById("arrow2").style.visibility = "visible";
-          }, 1000);
-          setTimeout(function () {
-            document.getElementById("arrow3").style.visibility = "visible";
-          }, 2000);
-        });
+
+        let messages = {
+            'debtor-area': { fullMessage: '', summary: '' },
+            'interm1-area': { fullMessage: '', summary: '' },
+            'interm2-area': { fullMessage: '', summary: '' },
+            'creditor-area': { fullMessage: '', summary: '' }
+        };
+
+        async function uploadMsgFile() {
+            const fileInput = document.getElementById('isoInput');
+            const textArea = document.getElementById('debtor-area');
+            const button = document.querySelector('.debtor-full-msg-btn');
+
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const formData = new FormData();
+                formData.append('file', file);
+
+                try {
+                    const response = await fetch('/upload_msg_file', {
+                        method: 'POST',
+                        body: formData,
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    messages['debtor-area'].fullMessage = data.full_message;
+                    messages['debtor-area'].summary = data.summary
+                    
+                    textArea.value = messages['debtor-area'].summary;
+
+                    
+                } catch (error) {
+                    console.error('Error fetching the file content:', error);
+                }
+            } else {
+                console.log('No file selected');
+            }
+        }
+
+        function toggleMessage(id) {
+            const textArea = document.getElementById(id);
+            const button = event.target;
+
+            if (textArea.value === messages[id].summary && messages[id].fullMessage !== '') {
+                textArea.value = messages[id].fullMessage;
+                button.textContent = 'Show summary';
+            } else {
+                textArea.value = messages[id].summary;
+                button.textContent = 'Show full message';
+            }
+        }
+
+
+
+        document
+            .querySelector(".transact-btn")
+            .addEventListener("click", function () {
+                document.getElementById("arrow1").style.visibility = "visible";
+                setTimeout(function () {
+                    document.getElementById("arrow2").style.visibility = "visible";
+                }, 1000);
+                setTimeout(function () {
+                    document.getElementById("arrow3").style.visibility = "visible";
+                }, 2000);
+            });
     </script>
-  </body>
+</body>
+
 </html>
