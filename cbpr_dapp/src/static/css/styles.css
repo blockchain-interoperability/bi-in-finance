@@ -135,15 +135,16 @@ main {
 }
 
 .arrow {
-  display: inline-block;
   width: 0;
   height: 0;
+  margin: -5px;
   border-top: 15px solid transparent;
   border-bottom: 15px solid transparent;
   border-left: 30px solid #ec5f5f;
   font-size: 0px;
   visibility: hidden;
   align-self: center;
+  z-index: 600;
 }
 
 .hidden {
