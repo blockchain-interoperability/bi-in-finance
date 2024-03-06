@@ -19,11 +19,20 @@
         </div>
     </header>
 
-    <div class="transact-container">
-        <button class="transact-btn" onclick="makeTransaction()">Transact</button>
-    </div>
 
-    <main>
+    <div class="container">
+        <div class="getter-setter">
+            <textarea class="getter-setter-textbox"></textarea>
+            <button class="info-btn">Initialize Smart Contract</button>
+        </div>
+        <div class="getter-setter">
+            <button class="info-btn">Get Debtor-Creditor Information</button>
+            <textarea class="getter-setter-textbox"></textarea>
+        </div>
+    </div>
+    
+
+    <div class="transaction">
         <section class="content-box">
             <div class="title-bar">Debtor Agent</div>
             <textarea class="content-space" id="debtor-area"></textarea>
@@ -47,13 +56,15 @@
             <textarea class="content-space" id="creditor-area"></textarea>
             <button class="section-btn" onclick="toggleMessage('creditor-area')">Show full message</button>
         </section>
-    </main>
+    </div>
 
-    <footer>
-        <button class="info-btn">Get Debtor-Creditor Information</button>
-        <textarea class="footer-textbox"></textarea>
-        <div class="ending">BRAINS Research Group</div>
-    </footer>
+    <div class="transact-container">
+        <button class="transact-btn" onclick="makeTransaction()">Transact</button>
+    </div>
+
+
+    <div class="ending">BRAINS Research Group</div>
+
 
     <script>
 
