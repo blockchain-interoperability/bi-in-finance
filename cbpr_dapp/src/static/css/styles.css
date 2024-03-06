@@ -23,7 +23,8 @@ hr {
   border: 0;
   height: 1px;
   background-color: #ccc;;
-  margin: 7px 0;
+  margin-top: 8px;
+  margin-bottom: 25px;
   width: 80%;
   opacity: 0.8;
 }
@@ -31,7 +32,7 @@ hr {
 
 header h1 {
   margin: 6px 0;
-  font-size: 27px;
+  font-size: 30px;
 }
 
 
