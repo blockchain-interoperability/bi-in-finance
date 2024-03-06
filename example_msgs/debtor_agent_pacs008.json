@@ -7,8 +7,8 @@
                 "NbOfTxs": "1",
                 "CtrlSum": "1300000",
                 "TtlIntrBkSttlmAmt": {
-                    "@Ccy": "AXB",
-                    "#text": "500000"
+                    "Ccy": "AXB",
+                    "Amt": "500000"
                 },
                 "IntrBkSttlmDt": "2012-12-13",
                 "SttlmInf": {
@@ -38,13 +38,13 @@
                     "UETR": "to-be-generated"
                 },
                 "IntrBkSttlmAmt": {
-                    "@Ccy": "AXB",
-                    "#text": "500000"
+                    "Ccy": "AXB",
+                    "Amt": "500000"
                 },
                 "IntrBkSttlmDt": "2012-12-13",
                 "InstdAmt": {
-                    "@Ccy": "DJK",
-                    "#text": "300000"
+                    "Ccy": "DJK",
+                    "Amt": "300000"
                 },
                 "XchgRate": "0.6",
                 "InstgAgt": {

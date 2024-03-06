@@ -16,8 +16,24 @@ def get_contract_abi(file_name, contract_name):
         return None
 
 
+def replace_keys(data, key_from, key_to):
+    if isinstance(data, dict):
+        for key in list(data.keys()):
+            if key == key_from:
+                data[key_to] = data.pop(key)
+            else:
+                replace_keys(data[key], key_from, key_to)
+    elif isinstance(data, list):
+        for item in data:
+            replace_keys(item, key_from, key_to)
+
+
 def get_summary(xml_data):
+
     data = xmltodict.parse(xml_data)
+
+    replace_keys(data, "@Ccy", "Ccy")
+    replace_keys(data, "#text", "Amt")
 
     debtor = data["Document"]["FIToFICstmrCdtTrf"]["CdtTrfTxInf"]["Dbtr"]["Nm"]
     debtor_account = data["Document"]["FIToFICstmrCdtTrf"]["CdtTrfTxInf"]["DbtrAcct"]["Id"]["Othr"]["Id"]

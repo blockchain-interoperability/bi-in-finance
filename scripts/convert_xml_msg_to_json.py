@@ -24,6 +24,17 @@ def choose_xml_file():
     file_path = filedialog.askopenfilename(title="Choose an XML file", filetypes=[("XML files", "*.xml")])
     return file_path
     
+def replace_keys(data, key_from, key_to):
+    if isinstance(data, dict):
+        for key in list(data.keys()):
+            if key == key_from:
+                data[key_to] = data.pop(key)
+            else:
+                replace_keys(data[key], key_from, key_to)
+    elif isinstance(data, list):
+        for item in data:
+            replace_keys(item, key_from, key_to)
+
 
 if __name__ == "__main__":
 
@@ -35,6 +46,9 @@ if __name__ == "__main__":
     xml_data = read_xml_file(xml_data_file)
 
     dict_data = convert_xml_to_dict(xml_data)
+
+    replace_keys(dict_data, "@Ccy", "Ccy")
+    replace_keys(dict_data, "#text", "Amt")
 
     # Converting the final dictionary to JSON
     json_data = json.dumps(dict_data, indent=4)
