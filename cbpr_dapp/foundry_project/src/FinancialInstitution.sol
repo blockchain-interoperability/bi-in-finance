@@ -34,7 +34,8 @@ contract FinancialInstitution{
     address _ownerAddress;
 
     mapping(address => string) private nostroAccountNo;
-    mapping(address => mapping(string => bool)) private generalAccountExists;
+    mapping(string => mapping(address => bool)) private generalAccountExists;
+    mapping(string => bool) private accountNoExists;
     mapping(string => uint256) public balances;
 
     struct Amount
@@ -43,6 +44,14 @@ contract FinancialInstitution{
         uint256 Amt;
     }
     
+    struct DbtrIntruction {
+        Amount IntrBkSttlmAmt;
+        address DbtrAgt;
+        string DbtrAcct;
+        string DbtrAgtIsoMsg;
+        address NxtAgt;
+    }
+
     struct MsgInfo {
         uint256 CtrlSum;
         Amount TtlIntrBkSttlmAmt;
@@ -64,12 +73,26 @@ contract FinancialInstitution{
     event MakeTransfer(string isoMsg);
     event PassISOMessageAlong(string updatedIsoMsg, address receiver);
 
-
     constructor() payable{
-
         _ownerAddress = msg.sender;
     }
 
+    function initiate_transfer(DbtrIntruction memory dbtrIntruction) public
+    {
+        // acting as debtor agent
+
+        require(generalAccountExists[dbtrIntruction.DbtrAcct][msg.sender], "Sender (Debtor) is not an account holder of this institution!");
+        require(balances[dbtrIntruction.DbtrAcct] >= dbtrIntruction.IntrBkSttlmAmt.Amt, "Sender (Debtor) doesn't have sufficient balance in their account!" );
+
+        balances[dbtrIntruction.DbtrAcct] -= dbtrIntruction.IntrBkSttlmAmt.Amt;
+
+        emit PassISOMessageAlong(dbtrIntruction.DbtrAgtIsoMsg, dbtrIntruction.NxtAgt);
+    }
+
+    function process_iso_message(string memory isoMsg) public
+    {
+        emit MakeTransfer(isoMsg);
+    }
 
     function get_fresh_account_number(string memory wantedAcctNo) private pure returns (string memory)
     {
@@ -86,7 +109,11 @@ contract FinancialInstitution{
         {
             nostroAccountNo[msg.sender] = get_fresh_account_number(wantedAcctNo);
         }
-        else generalAccountExists[msg.sender][get_fresh_account_number(wantedAcctNo)] = true;
+        else 
+        {
+            generalAccountExists[get_fresh_account_number(wantedAcctNo)][msg.sender] = true;
+            accountNoExists[get_fresh_account_number(wantedAcctNo)] = true;
+        }
     }
 
     function deposit(string memory acctNo) public payable
@@ -94,45 +121,32 @@ contract FinancialInstitution{
         //general account
         if (keccak256(abi.encodePacked(acctNo)) != keccak256(abi.encodePacked("")))
         {
-            require(generalAccountExists[msg.sender][acctNo], "Depositor is not an account holder of this institution!");
+            require(generalAccountExists[acctNo][msg.sender], "Depositor is not an account holder of this institution!");
             
             balances[acctNo] += msg.value;
         }
         //nostro account
         else
         {
-            string  memory account = nostroAccountNo[msg.sender];
+            string memory account = nostroAccountNo[msg.sender];
             require(bytes(account).length != 0, "Couldn't verify depositor");
             
             balances[account] += msg.value;
         }
     }
 
-    function makeTransfer(MsgInfo memory msgDetails) public 
+    function make_transfer(MsgInfo memory msgDetails) public 
     {
-        if(_ownerAddress != msgDetails.DbtrAgt)
-        {
-            require(msg.sender == msgDetails.InstgAgt, "Couldn't verify message sender!");
-            require(_ownerAddress == msgDetails.InstdAgt, "Current contract is not supposed to make this transaction!");
-        }
+        require(msg.sender == msgDetails.InstgAgt, "Couldn't verify message sender!");
+        require(_ownerAddress == msgDetails.InstdAgt, "Current contract is not supposed to make this transaction!");
 
         uint256 totalAmount = msgDetails.TtlIntrBkSttlmAmt.Amt+msgDetails.IntrBkSttlmAmt.Amt+msgDetails.InstdAmt.Amt;
         require(msgDetails.CtrlSum == totalAmount, "Transaction couldn't be verified!");
 
-
-        // acting as debtor agent
-        if(_ownerAddress == msgDetails.DbtrAgt)
-        {
-            require(generalAccountExists[msgDetails.DbtrAgt][msgDetails.DbtrAcct], "Sender (Debtor) is not an account holder of this institution!");
-            require(balances[msgDetails.DbtrAcct] >= msgDetails.IntrBkSttlmAmt.Amt, "Sender (Debtor) doesn't have sufficient balance in their account!" );
-
-            balances[msgDetails.DbtrAcct] -= msgDetails.IntrBkSttlmAmt.Amt;
-        }
-
         // acting as creditor agent
-        else if(_ownerAddress == msgDetails.CdtrAgt)
+        if(_ownerAddress == msgDetails.CdtrAgt)
         {
-            require(generalAccountExists[msgDetails.CdtrAgt][msgDetails.CdtrAcct], "Receiver (Creditor) is not an account holder of this institution!");
+            require(accountNoExists[msgDetails.CdtrAcct], "Receiver (Creditor) is not an account holder of this institution!");
             
             balances[msgDetails.CdtrAcct] += msgDetails.InstdAmt.Amt;
         }
@@ -140,18 +154,18 @@ contract FinancialInstitution{
         // acting as intermediary
         else
         {
-            string memory sender_account = nostroAccountNo[msg.sender];
-            require(bytes(sender_account).length != 0, "Sender is not a nostro account holder of this institution!");
+            string memory senderAccount = nostroAccountNo[msgDetails.InstgAgt];
+            require(bytes(senderAccount).length != 0, "Sender is not a nostro account holder of this institution!");
 
-            require(balances[sender_account] >= msgDetails.IntrBkSttlmAmt.Amt, "Sender agent doesn't have sufficient amount in it's nostro account!");
-            balances[sender_account] -= msgDetails.IntrBkSttlmAmt.Amt;
+            require(balances[senderAccount] >= msgDetails.IntrBkSttlmAmt.Amt, "Sender agent doesn't have sufficient amount in it's nostro account!");
+            balances[senderAccount] -= msgDetails.IntrBkSttlmAmt.Amt;
 
             if (keccak256(abi.encodePacked(msgDetails.SttlmAcct)) != keccak256(abi.encodePacked("")))
             {    
-                string memory cdtr_agt_account = nostroAccountNo[msgDetails.CdtrAgt];
-                require(bytes(cdtr_agt_account).length != 0, "Receiver (Creditor Agent) is not a nostro account holder of this institution!");
+                string memory cdtrAgtAccount = nostroAccountNo[msgDetails.CdtrAgt];
+                require(bytes(cdtrAgtAccount).length != 0, "Receiver (Creditor Agent) is not a nostro account holder of this institution!");
                 
-                balances[cdtr_agt_account] += msgDetails.IntrBkSttlmAmt.Amt;
+                balances[cdtrAgtAccount] += msgDetails.IntrBkSttlmAmt.Amt;
             }
         }
 
