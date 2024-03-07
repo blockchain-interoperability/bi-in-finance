@@ -11,113 +11,130 @@ contract FinancialInstitution{
     address public federalReserveAddress;
 
     mapping(address => string) private nostroAccountNo;
-    mapping(address => string) private accountNo;
-    mapping(address => uint256) public balances;
+    mapping(address => mapping(string => bool)) private generalAccountExists;
+    mapping(string => uint256) public balances;
 
     enum TransactionStatus { Pending, Confirmed }
-    // mapping(address => mapping(address => TransactionStatus)) private transactionStatus;
 
+    struct Amount
+    {
+        string Ccy;
+        uint256 Amt;
+    }
     
     struct MsgInfo {
         uint256 CtrlSum;
-        uint256 TtlIntrBkSttlmAmt;
-        uint256 amount;
-        address senderBank;
-        address recipientAccount;
-        address recipientBank;
-        string instruction;
+        Amount TtlIntrBkSttlmAmt;
+        address InstgAgt;
+        address InstdAgt;
+        Amount IntrBkSttlmAmt;
+        Amount InstdAmt;
+        uint256 XchgRate;
+        address DbtrAgt;
+        string DbtrAcct;
+        address CdtrAgt;
+        string CdtrAcct;
+        string SttlmMtd;
+        string SttlmAcct;
+        string FullMsgToForward;
     }
 
-    struct FedwireMessage {
-        uint256 amount;
-        address senderAccount;
-        address senderBank;
-        address recipientAccount;
-        address recipientBank;
-        string note;
+    constructor(string memory ownerName) {
+
+        _ownerAddress = msg.sender;
+        _ownerName = ownerName;
     }
 
-    constructor() {
-
-        federalReserveAddress = msg.sender;
-
-        initializeFRBParticipants();
-        initializeBankAccountsAndBalances();
-    }
-
-    function initializeBankAccountsAndBalances() private 
+    function get_fresh_account_number(string memory wantedAcctNo) private pure returns (string memory)
     {
-        address Alice = 0x5B38Da6a701c568545dCfcB03FcB875f56beddC4;
-        address BankA = 0x2222222222222222222222222222222222222222;
-        address Bob   = 0x8888888888888888888888888888888888888888;
-        address BankB = 0x4444444444444444444444444444444444444444;
-
-        hasAccountInBank[Alice][BankA] = true;
-        hasAccountInBank[Bob][BankB] = true;
-
-        bankBalances[Alice][BankA] = 500;
-        bankBalances[Bob][BankB] = 500;
+        if (keccak256(abi.encodePacked(wantedAcctNo)) != keccak256(abi.encodePacked("")))
+        {
+            return wantedAcctNo; //for testing purposes, allowing users to ask for a specific account number
+        }
+        return "AX0000"; // dummy value. a ramdom fresh account number will be generated here.
     }
 
-    function initializeFRBParticipants() private
+    function create_account(string memory acctType, string memory wantedAcctNo) public
     {
-        address[] memory participants = new address[](5);
-        participants[0] = 0x1111111111111111111111111111111111111111;
-        participants[1] = 0x2222222222222222222222222222222222222222;
-        participants[2] = 0x3333333333333333333333333333333333333333;
-        participants[3] = 0x4444444444444444444444444444444444444444;
-        participants[4] = 0x5555555555555555555555555555555555555555;
+        if (keccak256(abi.encodePacked(acctType)) == keccak256(abi.encodePacked("nostro")))
+        {
+            nostroAccountNo[msg.sender] = get_fresh_account_number(wantedAcctNo);
+        }
+        else generalAccountExists[msg.sender][get_fresh_account_number(wantedAcctNo)] = true;
+    }
 
-        uint256 initialReserveBalance = 1000;
-
-        for (uint256 i = 0; i < participants.length; i++) {
-            isFedwireParticipant[participants[i]] = true;
-            reserveBalances[participants[i]] = initialReserveBalance;
+    function deposit(string memory acctNo) public payable
+    {
+        //general account
+        if (keccak256(abi.encodePacked(acctNo)) != keccak256(abi.encodePacked("")))
+        {
+            require(generalAccountExists[msg.sender][acctNo], "Depositor is not an account holder of this institution!");
+            
+            balances[acctNo] += msg.value;
+        }
+        //nostro account
+        else
+        {
+            string  memory account = nostroAccountNo[msg.sender];
+            require(bytes(account).length != 0, "Couldn't verify depositor");
+            
+            balances[account] += msg.value;
         }
     }
 
-    function initiateTransfer(PaymentOrder memory payOrder) public  {
-        
-        require(hasAccountInBank[msg.sender][payOrder.senderBank], "Sender is not an account holder of this bank");
-        require(bankBalances[msg.sender][payOrder.senderBank] >= payOrder.amount, "Sender doesn't have sufficient balance in this bank account");
+    function makeTransfer(MsgInfo memory msgDetails) public 
+    {
+        if(_ownerAddress != msgDetails.DbtrAgt)
+        {
+            require(msg.sender == msgDetails.InstgAgt, "Couldn't verify message sender!");
+            require(_ownerAddress == msgDetails.InstdAgt, "Current contract is not supposed to make this transaction!");
+        }
 
-        transactionStatus[msg.sender][payOrder.recipientAccount] = TransactionStatus.Pending;
+        uint256 totalAmount = msgDetails.TtlIntrBkSttlmAmt.Amt+msgDetails.IntrBkSttlmAmt.Amt+msgDetails.InstdAmt.Amt;
+        require(msgDetails.CtrlSum == totalAmount, "Transaction couldn't be verified!");
 
-        bankBalances[msg.sender][payOrder.senderBank] -= payOrder.amount;
 
-        FedwireMessage memory fedwireMsg = FedwireMessage(payOrder.amount, msg.sender, payOrder.senderBank, payOrder.recipientAccount, payOrder.recipientBank, "Please process the transaction.");
+        // acting as debtor agent
+        if(_ownerAddress == msgDetails.DbtrAgt)
+        {
+            require(generalAccountExists[msgDetails.DbtrAgt][msgDetails.DbtrAcct], "Sender (Debtor) is not an account holder of this institution!");
+            require(balances[msgDetails.DbtrAcct] >= msgDetails.IntrBkSttlmAmt.Amt, "Sender (Debtor) doesn't have sufficient balance in their account!" );
 
-        federalReserveProcessMessage(fedwireMsg);
+            balances[msgDetails.DbtrAcct] -= msgDetails.IntrBkSttlmAmt.Amt;
 
-        require(transactionStatus[msg.sender][payOrder.recipientAccount] == TransactionStatus.Confirmed, "Transaction Failed 1!");
+            //TO_DO: send msg to next entity
+        }
+
+        // acting as creditor agent
+        else if(_ownerAddress == msgDetails.CdtrAgt)
+        {
+            require(generalAccountExists[msgDetails.CdtrAgt][msgDetails.CdtrAcct], "Receiver (Creditor) is not an account holder of this institution!");
+            
+            balances[msgDetails.CdtrAcct] += msgDetails.InstdAmt.Amt;
+
+            //TO_DO: send confirmation to previous entity
+        }
+
+        // acting as intermediary
+        else
+        {
+            string memory sender_account = nostroAccountNo[msg.sender];
+            require(bytes(sender_account).length != 0, "Sender is not a nostro account holder of this institution!");
+
+            require(balances[sender_account] >= msgDetails.IntrBkSttlmAmt.Amt, "Sender agent doesn't have sufficient amount in it's nostro account!");
+            balances[sender_account] -= msgDetails.IntrBkSttlmAmt.Amt;
+
+            if (keccak256(abi.encodePacked(msgDetails.SttlmAcct)) != keccak256(abi.encodePacked("")))
+            {    
+                string memory cdtr_agt_account = nostroAccountNo[msgDetails.CdtrAgt];
+                require(bytes(cdtr_agt_account).length != 0, "Receiver (Creditor Agent) is not a nostro account holder of this institution!");
+                
+                balances[cdtr_agt_account] += msgDetails.IntrBkSttlmAmt.Amt;
+            }
+
+            //TO_DO: send confirmation to previous entity
+            //TO_DO: modify msg and send it to next entity
+        }
     }
 
-
-    function federalReserveProcessMessage(FedwireMessage memory fedwireMsg) internal {
-     
-        require(isFedwireParticipant[fedwireMsg.senderBank], "Sending Bank is not a fedwire participant");
-        require(isFedwireParticipant[fedwireMsg.recipientBank], "Receiving Bank is not a fedwire participant");
-
-        require(reserveBalances[fedwireMsg.senderBank] >= fedwireMsg.amount, "Sending bank does not have sufficient reserve balance");
-        require(transactionStatus[fedwireMsg.senderAccount][fedwireMsg.recipientAccount] == TransactionStatus.Pending, "Transaction Failed 2!");
-
-        reserveBalances[fedwireMsg.senderBank] -= fedwireMsg.amount;
-        reserveBalances[fedwireMsg.recipientBank] += fedwireMsg.amount;
-
-        FedwireMessage memory confirmationFedwireMsg = FedwireMessage(fedwireMsg.amount, msg.sender, fedwireMsg.senderBank, fedwireMsg.recipientAccount, fedwireMsg.recipientBank, "Transfer successful ! Please credit the amount to receivers bank account.");
-
-
-        receiverBankProcessMessage(confirmationFedwireMsg);
-
-        require(transactionStatus[fedwireMsg.senderAccount][fedwireMsg.recipientAccount] == TransactionStatus.Confirmed, "Transaction Failed 3!");
-    }
-
-    function receiverBankProcessMessage(FedwireMessage memory confirmationFedwireMsg) internal {
-        
-        require(transactionStatus[confirmationFedwireMsg.senderAccount][confirmationFedwireMsg.recipientAccount] == TransactionStatus.Pending, "Transaction Failed!");
-        
-        bankBalances[confirmationFedwireMsg.recipientAccount][confirmationFedwireMsg.recipientBank] += confirmationFedwireMsg.amount;
-        
-        transactionStatus[confirmationFedwireMsg.senderAccount][confirmationFedwireMsg.recipientAccount] = TransactionStatus.Confirmed;
-    }
 }
