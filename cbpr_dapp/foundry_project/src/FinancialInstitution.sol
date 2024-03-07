@@ -57,17 +57,19 @@ contract FinancialInstitution{
         string CdtrAcct;
         string SttlmMtd;
         string SttlmAcct;
+        string UpdtdMsg;
+        address NxtAgt;
     }
 
-    event TransactionSuccessful(
-        string successMessage
-    );
+    event MakeTransfer(string isoMsg);
+    event PassISOMessageAlong(string updatedIsoMsg, address receiver);
 
 
     constructor() payable{
 
         _ownerAddress = msg.sender;
     }
+
 
     function get_fresh_account_number(string memory wantedAcctNo) private pure returns (string memory)
     {
@@ -153,7 +155,7 @@ contract FinancialInstitution{
             }
         }
 
-        emit TransactionSuccessful("Transaction Successful");
+        emit PassISOMessageAlong(msgDetails.UpdtdMsg, msgDetails.NxtAgt);
     }
 
 }
