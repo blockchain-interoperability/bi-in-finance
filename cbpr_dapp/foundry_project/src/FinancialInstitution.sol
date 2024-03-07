@@ -57,8 +57,11 @@ contract FinancialInstitution{
         string CdtrAcct;
         string SttlmMtd;
         string SttlmAcct;
-        string FullMsgToForward;
     }
+
+    event TransactionSuccessful(
+        string successMessage
+    );
 
 
     constructor() payable{
@@ -122,8 +125,6 @@ contract FinancialInstitution{
             require(balances[msgDetails.DbtrAcct] >= msgDetails.IntrBkSttlmAmt.Amt, "Sender (Debtor) doesn't have sufficient balance in their account!" );
 
             balances[msgDetails.DbtrAcct] -= msgDetails.IntrBkSttlmAmt.Amt;
-
-            //TO_DO: send msg to next entity
         }
 
         // acting as creditor agent
@@ -132,8 +133,6 @@ contract FinancialInstitution{
             require(generalAccountExists[msgDetails.CdtrAgt][msgDetails.CdtrAcct], "Receiver (Creditor) is not an account holder of this institution!");
             
             balances[msgDetails.CdtrAcct] += msgDetails.InstdAmt.Amt;
-
-            //TO_DO: send confirmation to previous entity
         }
 
         // acting as intermediary
@@ -152,10 +151,9 @@ contract FinancialInstitution{
                 
                 balances[cdtr_agt_account] += msgDetails.IntrBkSttlmAmt.Amt;
             }
-
-            //TO_DO: send confirmation to previous entity
-            //TO_DO: modify msg and send it to next entity
         }
+
+        emit TransactionSuccessful("Transaction Successful");
     }
 
 }
