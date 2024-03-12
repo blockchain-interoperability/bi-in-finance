@@ -11,7 +11,7 @@ contract ConnectToWeb3Test is Test {
         connectToWeb3 = new ConnectToWeb3();
     }
 
-    function testName() public {
-       string memory name = connectToWeb3.getPerson();
-    }
+    // function testName() public {
+    //    string memory name = connectToWeb3.getPerson();
+    // }
 }

@@ -13,7 +13,7 @@
          </SttlmInf>
          <InstgAgt>
             <FinInstnId>
-               <BICFI>THETA</BICFI>
+               <BICFI>0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2</BICFI>
                <Nm>BANK THETA</Nm>
                <PstlAdr>
                   <Ctry>CTRY-DJK</Ctry>
@@ -22,7 +22,7 @@
          </InstgAgt>
          <InstdAgt>
             <FinInstnId>
-               <BICFI>GAMMA</BICFI>
+               <BICFI>0xa131AD247055FD2e2aA8b156A11bdEc81b9eAD95</BICFI>
                <Nm>BANK GAMMA</Nm>
                <PstlAdr>
                   <Ctry>CTRY-DJK</Ctry>
@@ -40,7 +40,7 @@
          <XchgRate>0.6</XchgRate>
          <PrvsInstgAgt1>
             <FinInstnId>
-               <BICFI>BETA</BICFI>
+               <BICFI>0xd9145CCE52D386f254917e481eB44e9943F39138</BICFI>
                <Nm>BANK BETA</Nm>
                <PstlAdr>
                   <Ctry>CTRY-AXB</Ctry>
@@ -49,7 +49,7 @@
          </PrvsInstgAgt1>
          <InstgAgt>
             <FinInstnId>
-               <BICFI>THETA</BICFI>
+               <BICFI>0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2</BICFI>
                <Nm>BANK THETA</Nm>
                <PstlAdr>
                   <Ctry>CTRY-DJK</Ctry>
@@ -58,7 +58,7 @@
          </InstgAgt>
          <InstdAgt>
             <FinInstnId>
-               <BICFI>GAMMA</BICFI>
+               <BICFI>0xa131AD247055FD2e2aA8b156A11bdEc81b9eAD95</BICFI>
                <Nm>BANK GAMMA</Nm>
                <PstlAdr>
                   <Ctry>CTRY-DJK</Ctry>
@@ -80,7 +80,7 @@
          </DbtrAcct>
          <DbtrAgt>
             <FinInstnId>
-               <BICFI>ALPHA</BICFI>
+               <BICFI>0x5B38Da6a701c568545dCfcB03FcB875f56beddC4</BICFI>
                <Nm>Bank ALPHA</Nm>
                <PstlAdr>
                   <Ctry>CTRY-AXB</Ctry>
@@ -89,7 +89,7 @@
          </DbtrAgt>
          <CdtrAgt>
             <FinInstnId>
-               <BICFI>GAMMA</BICFI>
+               <BICFI>0xa131AD247055FD2e2aA8b156A11bdEc81b9eAD95</BICFI>
                <Nm>BANK GAMMA</Nm>
                <PstlAdr>
                   <Ctry>CTRY-DJK</Ctry>

@@ -3,14 +3,16 @@ from flask import Flask, render_template, request, jsonify
 from web3 import Web3
 import util
 import json
+import threading
+
 
 app = Flask(__name__)
 
 web3 = Web3(Web3.HTTPProvider('http://localhost:8545'))
 web3.eth.defaultAccount = web3.eth.accounts[0]
 
-ABI = util.get_contract_abi(file_name = "ConnectToWeb3", contract_name = "ConnectToWeb3")
-ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+ABI = util.get_contract_abi(file_name = "FinancialInstitution", contract_name = "FinancialInstitution")
+ADDRESS = "0x4ed7c70F96B99c776995fB64377f0d4aB3B0e1C1"
 
 contract = web3.eth.contract(address=ADDRESS, abi=ABI)
 
@@ -30,10 +32,55 @@ def upload_msg_file():
         return jsonify({'error': 'No selected file'}), 400
     
     if file:
+
         content = file.read().decode('utf-8')
-        return jsonify({'full_message': content, 'summary': util.get_summary(content)}), 200
+        dbtr_instruction = util.get_debtor_instructions(content)
+
+        if web3.is_connected():
+         
+            tx_hash = contract.functions.initiate_transfer(dbtr_instruction).transact()
+            tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
+            
+            if tx_receipt.status == 1:
+                event_filter = contract.events.PassISOMessageAlong.create_filter(fromBlock='latest')
+                new_events = event_filter.get_all_entries()
+              
+                if new_events:
+                    last_event = new_events[-1]
+                    # print(last_event['args']['updatedIsoMsg'])
+                    # print(last_event['args']['receiver'])
+                else:
+                    print("No events found")
+
+                return jsonify({'full_message': last_event['args']['updatedIsoMsg'], 'summary': last_event['args']['receiver']}), 200
+            else:
+                print("Transaction failed!")
+                return "Transaction failed!"
+        else:
+            return "Failed to read data from Smart Contract"
+
     else:
         return jsonify({'error': 'File not processed'}), 400
+
+
+
+
+def listen_to_events():
+    # event_filter = contract.events.PassISOMessageAlong.create_filter(fromBlock='latest')
+    # print("=============> ", event_filter)
+    
+    while True:
+
+        filter = web3.eth.filter({
+            "fromBlock": "latest",
+            "address": ADDRESS,
+        })
+
+        new_events = filter.get_all_entries()
+        for event in new_events:
+            print("Received event:", event)
+
+
 
 
 @app.route('/make_transaction', methods=['POST'])
@@ -89,4 +136,9 @@ def update_data():
 
 
 if __name__ == '__main__':
+    
+    # event_thread = threading.Thread(target=listen_to_events)
+    # event_thread.daemon = True
+    # event_thread.start()
+
     app.run(debug=True)

@@ -7,8 +7,8 @@
                 "NbOfTxs": "1",
                 "CtrlSum": "1300000",
                 "TtlIntrBkSttlmAmt": {
-                    "@Ccy": "AXB",
-                    "#text": "500000"
+                    "Ccy": "AXB",
+                    "Amt": "500000"
                 },
                 "IntrBkSttlmDt": "2012-12-13",
                 "SttlmInf": {
@@ -23,7 +23,7 @@
                 },
                 "InstgAgt": {
                     "FinInstnId": {
-                        "BICFI": "BETA",
+                        "BICFI": "0xd9145CCE52D386f254917e481eB44e9943F39138",
                         "Nm": "BANK BETA",
                         "PstlAdr": {
                             "Ctry": "CTRY-AXB"
@@ -32,7 +32,7 @@
                 },
                 "InstdAgt": {
                     "FinInstnId": {
-                        "BICFI": "THETA",
+                        "BICFI": "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2",
                         "Nm": "BANK THETA",
                         "PstlAdr": {
                             "Ctry": "CTRY-DJK"
@@ -45,18 +45,18 @@
                     "UETR": "to-be-generated"
                 },
                 "IntrBkSttlmAmt": {
-                    "@Ccy": "AXB",
-                    "#text": "500000"
+                    "Ccy": "AXB",
+                    "Amt": "500000"
                 },
                 "IntrBkSttlmDt": "2012-12-13",
                 "InstdAmt": {
-                    "@Ccy": "DJK",
-                    "#text": "300000"
+                    "Ccy": "DJK",
+                    "Amt": "300000"
                 },
                 "XchgRate": "0.6",
                 "InstgAgt": {
                     "FinInstnId": {
-                        "BICFI": "BETA",
+                        "BICFI": "0xd9145CCE52D386f254917e481eB44e9943F39138",
                         "Nm": "BANK BETA",
                         "PstlAdr": {
                             "Ctry": "CTRY-AXB"
@@ -65,7 +65,7 @@
                 },
                 "InstdAgt": {
                     "FinInstnId": {
-                        "BICFI": "THETA",
+                        "BICFI": "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2",
                         "Nm": "BANK THETA",
                         "PstlAdr": {
                             "Ctry": "CTRY-DJK"
@@ -87,7 +87,7 @@
                 },
                 "DbtrAgt": {
                     "FinInstnId": {
-                        "BICFI": "ALPHA",
+                        "BICFI": "0x5B38Da6a701c568545dCfcB03FcB875f56beddC4",
                         "Nm": "Bank ALPHA",
                         "PstlAdr": {
                             "Ctry": "CTRY-AXB"
@@ -96,7 +96,7 @@
                 },
                 "CdtrAgt": {
                     "FinInstnId": {
-                        "BICFI": "GAMMA",
+                        "BICFI": "0xa131AD247055FD2e2aA8b156A11bdEc81b9eAD95",
                         "Nm": "BANK GAMMA",
                         "PstlAdr": {
                             "Ctry": "CTRY-DJK"

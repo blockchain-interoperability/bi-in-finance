@@ -169,7 +169,7 @@ contract FinancialInstitution{
             }
         }
 
-        emit PassISOMessageAlong(msgDetails.UpdtdMsg, msgDetails.NxtAgt);
+        // emit PassISOMessageAlong(msgDetails.UpdtdMsg, msgDetails.NxtAgt);
     }
 
 }

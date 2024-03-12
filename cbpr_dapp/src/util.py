@@ -20,7 +20,10 @@ def replace_keys(data, key_from, key_to):
     if isinstance(data, dict):
         for key in list(data.keys()):
             if key == key_from:
-                data[key_to] = data.pop(key)
+                if(key == '#text'):
+                    data[key_to] = int(data.pop(key))
+                else:
+                    data[key_to] = data.pop(key)
             else:
                 replace_keys(data[key], key_from, key_to)
     elif isinstance(data, list):
@@ -28,12 +31,32 @@ def replace_keys(data, key_from, key_to):
             replace_keys(item, key_from, key_to)
 
 
-def get_summary(xml_data):
-
+def convert_to_dict(xml_data):
     data = xmltodict.parse(xml_data)
-
     replace_keys(data, "@Ccy", "Ccy")
     replace_keys(data, "#text", "Amt")
+
+    return data
+
+
+def get_debtor_instructions(xml_data):
+
+    dict_data = convert_to_dict(xml_data)
+
+    dbtr_instruction = {
+        "IntrBkSttlmAmt": dict_data['Document']['FIToFICstmrCdtTrf']['CdtTrfTxInf']['IntrBkSttlmAmt'],
+        "DbtrAgt": dict_data['Document']['FIToFICstmrCdtTrf']['CdtTrfTxInf']['DbtrAgt']['FinInstnId']['BICFI'],
+        "DbtrAcct": dict_data['Document']['FIToFICstmrCdtTrf']['CdtTrfTxInf']['DbtrAcct']['Id']['Othr']['Id'],
+        "DbtrAgtIsoMsg": xml_data,
+        "NxtAgt": dict_data['Document']['FIToFICstmrCdtTrf']['GrpHdr']['InstdAgt']['FinInstnId']['BICFI']
+    }
+
+    return dbtr_instruction
+
+
+def get_summary(xml_data):
+
+    data = convert_to_dict(xml_data)
 
     debtor = data["Document"]["FIToFICstmrCdtTrf"]["CdtTrfTxInf"]["Dbtr"]["Nm"]
     debtor_account = data["Document"]["FIToFICstmrCdtTrf"]["CdtTrfTxInf"]["DbtrAcct"]["Id"]["Othr"]["Id"]
