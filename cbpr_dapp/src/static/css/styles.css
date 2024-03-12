@@ -99,30 +99,8 @@ header h1 {
 
 .transaction {
   display: flex;
-  height: 50%;
+  height: 55%;
   padding: 10px;
-}
-
-.transact-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 50px;
-  width: 100%;
-}
-
-.transact-btn {
-  width: 15%;
-  margin-top: 10px;
-  padding: 10px 15px;
-  background-color: #28a745;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-.transact-btn:hover {
-  background-color: #218838;
 }
 
 .content-box {
@@ -151,10 +129,13 @@ header h1 {
   resize: none;
 }
 
-.section-btn {
+.toggle-btn {
+  width: 49%;
   background-color: #d5d8da;
   color: #333333;
-  padding: 5px;
+  margin-top: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   border: none;
   border-radius: 0px 0px 5px 5px;
   cursor: pointer;
@@ -163,9 +144,28 @@ header h1 {
   font-weight: 600;
 }
 
-.section-btn:hover {
+.toggle-btn:hover {
   background-color: #b0b3b6;
 }
+
+.transact-btn {
+  width: 49.5%;
+  margin-top: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 0px 0px 5px 5px;
+  cursor: pointer;
+  font-family: 'Arial', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+}
+.transact-btn:hover {
+  background-color: #218838;
+}
+
 
 .arrow {
   width: 0;

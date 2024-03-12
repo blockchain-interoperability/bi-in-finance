@@ -12,7 +12,7 @@ web3 = Web3(Web3.HTTPProvider('http://localhost:8545'))
 web3.eth.defaultAccount = web3.eth.accounts[0]
 
 ABI = util.get_contract_abi(file_name = "FinancialInstitution", contract_name = "FinancialInstitution")
-ADDRESS = "0x4ed7c70F96B99c776995fB64377f0d4aB3B0e1C1"
+ADDRESS = "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44"
 
 contract = web3.eth.contract(address=ADDRESS, abi=ABI)
 

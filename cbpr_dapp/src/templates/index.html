@@ -36,31 +36,41 @@
         <section class="content-box">
             <div class="title-bar">Debtor Agent</div>
             <textarea class="content-space" id="debtor-area"></textarea>
-            <button class="section-btn" onclick="toggleMessage('debtor-area')">Show full message</button>
+            <div>
+                <button class="toggle-btn" onclick="toggleMessage('debtor-area')">Show full message</button>
+                <button class="transact-btn" onclick="makeTransaction()">Transact</button> 
+            </div>
         </section>
         <div class="arrow hidden" id="arrow1"></div>
+
         <section class="content-box">
             <div class="title-bar">Intermediary 1</div>
             <textarea class="content-space" id="interm1-area"></textarea>
-            <button class="section-btn" onclick="toggleMessage('interm1-area')">Show full message</button>
-        </section>
+            <div>
+                <button class="toggle-btn" onclick="toggleMessage('interm1-area')">Show full message</button>
+                <button class="transact-btn" onclick="makeTransaction()">Transact</button> 
+            </div>        </section>
         <div class="arrow hidden" id="arrow2"></div>
+
         <section class="content-box">
             <div class="title-bar">Intermediary 2</div>
             <textarea class="content-space" id="interm2-area"></textarea>
-            <button class="section-btn" onclick="toggleMessage('interm2-area')">Show full message</button>
-        </section>
+            <div>
+                <button class="toggle-btn" onclick="toggleMessage('interm2-area')">Show full message</button>
+                <button class="transact-btn" onclick="makeTransaction()">Transact</button> 
+            </div>        </section>
         <div class="arrow hidden" id="arrow3"></div>
+        
         <section class="content-box">
             <div class="title-bar">Creditor Agent</div>
             <textarea class="content-space" id="creditor-area"></textarea>
-            <button class="section-btn" onclick="toggleMessage('creditor-area')">Show full message</button>
+            <button class="toggle-btn" onclick="toggleMessage('creditor-area')">Show full message</button>
         </section>
     </div>
 
-    <div class="transact-container">
+    <!-- <div class="transact-container">
         <button class="transact-btn" onclick="makeTransaction()">Transact</button>
-    </div>
+    </div> -->
 
 
     <div class="ending">BRAINS Research Group</div>
