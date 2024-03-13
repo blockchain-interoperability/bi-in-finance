@@ -9,10 +9,10 @@ import threading
 app = Flask(__name__)
 
 web3 = Web3(Web3.HTTPProvider('http://localhost:8545'))
-web3.eth.defaultAccount = web3.eth.accounts[0]
+web3.eth.defaultAccount = web3.eth.accounts[3]
 
 ABI = util.get_contract_abi(file_name = "FinancialInstitution", contract_name = "FinancialInstitution")
-ADDRESS = "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44"
+ADDRESS = "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6"
 
 contract = web3.eth.contract(address=ADDRESS, abi=ABI)
 
@@ -37,7 +37,7 @@ def upload_msg_file():
         dbtr_instruction = util.get_debtor_instructions(content)
 
         if web3.is_connected():
-         
+
             tx_hash = contract.functions.initiate_transfer(dbtr_instruction).transact()
             tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
             
@@ -52,7 +52,8 @@ def upload_msg_file():
                 else:
                     print("No events found")
 
-                return jsonify({'full_message': last_event['args']['updatedIsoMsg'], 'summary': last_event['args']['receiver']}), 200
+                # return jsonify({'full_message': last_event['args']['updatedIsoMsg'], 'summary': last_event['args']['receiver']}), 200
+                return jsonify({'full_message': str(content), 'summary': str(dbtr_instruction)}), 200
             else:
                 print("Transaction failed!")
                 return "Transaction failed!"
@@ -62,6 +63,37 @@ def upload_msg_file():
     else:
         return jsonify({'error': 'File not processed'}), 400
 
+
+
+@app.route('/init_contracts', methods=['POST'])
+def init_contracts():
+    data = request.get_json(force=True)
+    print(data)
+    init_contracts_info = json.loads(data.get('init_contracts_info'))
+    
+    if not init_contracts_info:
+        return jsonify({'error': 'No init-contract-info'}), 400
+    
+    DA_contract = web3.eth.contract(address=init_contracts_info['SmartContractAddresses'][0], abi=ABI)
+    I1_contract = web3.eth.contract(address=init_contracts_info['SmartContractAddresses'][1], abi=ABI)
+    I2_contract = web3.eth.contract(address=init_contracts_info['SmartContractAddresses'][2], abi=ABI)
+
+    web3.eth.defaultAccount = web3.eth.accounts[0]
+    DA_contract.functions.create_account("general", init_contracts_info['DbtrAcct']).transact()
+    DA_contract.functions.deposit(init_contracts_info['DbtrAcct']).transact({'value': init_contracts_info['D_to_DA_DepositAmt']})
+
+    web3.eth.defaultAccount = web3.eth.accounts[1]
+    I1_contract.functions.create_account("nostro", init_contracts_info['DbtrAgtAcct']).transact()
+    I1_contract.functions.deposit("").transact({'value': init_contracts_info['DA_to_I1_DepositAmt']})
+
+    web3.eth.defaultAccount = web3.eth.accounts[2]
+    I2_contract.functions.create_account("nostro", init_contracts_info['I1Acct']).transact()
+    I2_contract.functions.deposit("").transact({'value': init_contracts_info['I1_to_I2_DepositAmt']})
+    
+    web3.eth.defaultAccount = web3.eth.accounts[5]
+    I2_contract.functions.create_account("general", init_contracts_info['CdtrAcct']).transact()
+
+    return jsonify({'msg': "successful"}), 200
 
 
 

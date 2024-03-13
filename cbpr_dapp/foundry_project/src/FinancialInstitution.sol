@@ -32,6 +32,7 @@ pragma solidity ^0.8.0;
 contract FinancialInstitution{
 
     address _ownerAddress;
+    address _testAddress;
 
     mapping(address => string) private nostroAccountNo;
     mapping(string => mapping(address => bool)) private generalAccountExists;
@@ -75,6 +76,15 @@ contract FinancialInstitution{
 
     constructor() payable{
         _ownerAddress = msg.sender;
+    }
+
+    function set_sender() public
+    {
+        _testAddress = msg.sender;
+    }
+    function get_sender() public view returns (address)
+    {
+        return _testAddress;
     }
 
     function initiate_transfer(DbtrIntruction memory dbtrIntruction) public
@@ -169,7 +179,7 @@ contract FinancialInstitution{
             }
         }
 
-        // emit PassISOMessageAlong(msgDetails.UpdtdMsg, msgDetails.NxtAgt);
+        emit PassISOMessageAlong(msgDetails.UpdtdMsg, msgDetails.NxtAgt);
     }
 
 }

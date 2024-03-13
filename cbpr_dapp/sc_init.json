@@ -1,0 +1,27 @@
+{
+    "DbtrAcct" : "A37856",
+    "DbtrAgtAcct" : "BBBBBB",
+    "I1Acct" : "CCCCCC",
+    "I2Acct" : "DDDDDD",
+    "CdtrAcct" : "BG65893",
+
+    "D_to_DA_DepositAmt" : 800,
+    "DA_to_I1_DepositAmt" : 700,
+    "I1_to_I2_DepositAmt" : 600,
+
+    "AgentAddresses" : [
+                        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                        "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+                        "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+                        "0x90F79bf6EB2c4f870365E785982E1f101E93b906",
+                        "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65",
+                        "0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc"
+                       ],
+
+    "SmartContractAddresses" : [
+                                "0x71C95911E9a5D330f4D621842EC243EE1343292e",
+                                "0x2E983A1Ba5e8b38AAAeC4B440B9dDcFBf72E15d1",
+                                "0x057ef64E23666F000b34aE31332854aCBd1c8544",
+                                "0xbdEd0D2bf404bdcBa897a74E6657f1f12e5C6fb6"
+                            ]
+}

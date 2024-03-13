@@ -22,8 +22,8 @@
 
     <div class="container">
         <div class="getter-setter">
-            <textarea class="getter-setter-textbox"></textarea>
-            <button class="info-btn">Initialize Smart Contract</button>
+            <textarea id="contract-init-area", class="getter-setter-textbox"></textarea>
+            <button class="info-btn"  onclick="initializeSmartContract()">Initialize Smart Contract</button>
         </div>
         <div class="getter-setter">
             <button class="info-btn">Get Debtor-Creditor Information</button>
@@ -138,6 +138,41 @@
             }
         }
 
+        async function initializeSmartContract() {
+
+            console.log("entered!!");
+            
+            var initText = document.getElementById("contract-init-area").value;
+
+            if (initText.length > 0) {
+                try {
+                    const response = await fetch('/init_contracts', {
+                        method: 'POST',
+                        body: JSON.stringify({init_contracts_info: initText}),
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    // const data = await response.json();
+                    // messages['interm1-area'].fullMessage = data.interm1_full_message;
+                    // messages['interm1-area'].summary = data.interm1_summary;
+                    // messages['interm2-area'].fullMessage = data.interm2_full_message;
+                    // messages['interm2-area'].summary = data.interm2_summary;
+                    // messages['creditor-area'].fullMessage = data.creditor_full_message;
+                    // messages['creditor-area'].summary = data.creditor_summary;
+
+                } catch (error) {
+                    console.error('Error fetching the content:', error);
+                }
+            } else {
+                console.log('No file selected');
+            }
+        }
+
+
+
         async function makeTransaction() {
 
             if (messages['debtor-area'].fullMessage.length > 0) {
@@ -189,7 +224,6 @@
                 }
             }
         }
-
 
         function toggleMessage(id) {
             const textArea = document.getElementById(id);
