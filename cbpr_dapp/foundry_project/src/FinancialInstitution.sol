@@ -145,6 +145,11 @@ contract FinancialInstitution{
         }
     }
 
+    function get_balance(string memory acctNo) view public returns (uint256)
+    {
+        return balances[acctNo];
+    }
+
     function make_transfer(MsgInfo memory msgDetails) public 
     {
         require(msg.sender == msgDetails.InstgAgt, "Couldn't verify message sender!");
