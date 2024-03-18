@@ -1,238 +1,285 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CBPR Project</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
-</head>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+  </head>
 
-<body>
+  <body>
     <header>
-        <h1>CBPR+ : Transaction for pacs.008</h1>
-        <hr />
-        <div class="file-upload-container">
-            <h3>Choose ISO Message :</h3>
-            <input type="file" id="isoInput" accept=".xml"/>
-            <button class="upload-btn" onclick="uploadMsgFile()">Upload</button>
-        </div>
+      <h1>CBPR+ : Transaction for pacs.008</h1>
+      <hr />
+      <div class="file-upload-container">
+        <h3>Choose ISO Message :</h3>
+        <input type="file" id="isoInput" accept=".xml" />
+        <button class="upload-btn" onclick="uploadMsgFile()">Upload</button>
+      </div>
     </header>
 
-
     <div class="container">
-        <div class="getter-setter">
-            <textarea id="contract-init-area", class="getter-setter-textbox"></textarea>
-            <button class="info-btn"  onclick="initializeSmartContract()">Initialize Smart Contract</button>
-        </div>
-        <div class="getter-setter">
-            <button class="info-btn">Get Debtor-Creditor Information</button>
-            <textarea class="getter-setter-textbox"></textarea>
-        </div>
+      <div class="getter-setter">
+        <textarea
+          id="contract-init-area"
+          ,
+          class="getter-setter-textbox"
+        ></textarea>
+        <button class="info-btn" onclick="initializeSmartContract()">
+          Initialize Smart Contract
+        </button>
+      </div>
+      <div class="getter-setter">
+        <button class="info-btn" onclick="getDCInfo()">
+          Get Account Info From Different Banks
+        </button>
+        <textarea id="get-info-area" , class="getter-setter-textbox"></textarea>
+      </div>
     </div>
-    
 
     <div class="transaction">
-        <section class="content-box">
-            <div class="title-bar">Debtor Agent</div>
-            <textarea class="content-space" id="debtor-area"></textarea>
-            <div>
-                <button class="toggle-btn" onclick="toggleMessage('debtor-area')">Show full message</button>
-                <button class="transact-btn" onclick="makeTransaction()">Transact</button> 
-            </div>
-        </section>
-        <div class="arrow hidden" id="arrow1"></div>
+      <section class="content-box">
+        <div class="title-bar">Debtor Agent</div>
+        <textarea class="content-space" id="debtor-area"></textarea>
+        <div>
+          <button class="toggle-btn" onclick="toggleMessage('debtor-area')">
+            Show full message
+          </button>
+          <button class="transact-btn" onclick="makeTransaction()">
+            Transact
+          </button>
+        </div>
+      </section>
+      <div class="arrow hidden" id="arrow1"></div>
 
-        <section class="content-box">
-            <div class="title-bar">Intermediary 1</div>
-            <textarea class="content-space" id="interm1-area"></textarea>
-            <div>
-                <button class="toggle-btn" onclick="toggleMessage('interm1-area')">Show full message</button>
-                <button class="transact-btn" onclick="makeTransaction()">Transact</button> 
-            </div>        </section>
-        <div class="arrow hidden" id="arrow2"></div>
+      <section class="content-box">
+        <div class="title-bar">Intermediary 1</div>
+        <textarea class="content-space" id="interm1-area"></textarea>
+        <div>
+          <button class="toggle-btn" onclick="toggleMessage('interm1-area')">
+            Show full message
+          </button>
+          <button class="transact-btn" onclick="makeTransaction()">
+            Transact
+          </button>
+        </div>
+      </section>
+      <div class="arrow hidden" id="arrow2"></div>
 
-        <section class="content-box">
-            <div class="title-bar">Intermediary 2</div>
-            <textarea class="content-space" id="interm2-area"></textarea>
-            <div>
-                <button class="toggle-btn" onclick="toggleMessage('interm2-area')">Show full message</button>
-                <button class="transact-btn" onclick="makeTransaction()">Transact</button> 
-            </div>        </section>
-        <div class="arrow hidden" id="arrow3"></div>
-        
-        <section class="content-box">
-            <div class="title-bar">Creditor Agent</div>
-            <textarea class="content-space" id="creditor-area"></textarea>
-            <button class="toggle-btn" onclick="toggleMessage('creditor-area')">Show full message</button>
-        </section>
+      <section class="content-box">
+        <div class="title-bar">Intermediary 2</div>
+        <textarea class="content-space" id="interm2-area"></textarea>
+        <div>
+          <button class="toggle-btn" onclick="toggleMessage('interm2-area')">
+            Show full message
+          </button>
+          <button class="transact-btn" onclick="makeTransaction()">
+            Transact
+          </button>
+        </div>
+      </section>
+      <div class="arrow hidden" id="arrow3"></div>
+
+      <section class="content-box">
+        <div class="title-bar">Creditor Agent</div>
+        <textarea class="content-space" id="creditor-area"></textarea>
+        <button class="toggle-btn" onclick="toggleMessage('creditor-area')">
+          Show full message
+        </button>
+      </section>
     </div>
 
     <!-- <div class="transact-container">
         <button class="transact-btn" onclick="makeTransaction()">Transact</button>
     </div> -->
 
-
     <div class="ending">BRAINS Research Group</div>
 
-
     <script>
+      let messages = {
+        "debtor-area": { fullMessage: "", summary: "" },
+        "interm1-area": { fullMessage: "", summary: "" },
+        "interm2-area": { fullMessage: "", summary: "" },
+        "creditor-area": { fullMessage: "", summary: "" },
+      };
 
-        let messages = {
-            'debtor-area': { fullMessage: '', summary: '' },
-            'interm1-area': { fullMessage: '', summary: '' },
-            'interm2-area': { fullMessage: '', summary: '' },
-            'creditor-area': { fullMessage: '', summary: '' }
+      function initializeMessages() {
+        messages = {
+          "debtor-area": { fullMessage: "", summary: "" },
+          "interm1-area": { fullMessage: "", summary: "" },
+          "interm2-area": { fullMessage: "", summary: "" },
+          "creditor-area": { fullMessage: "", summary: "" },
         };
 
-        function initializeMessages() {
-            messages = {
-                'debtor-area': { fullMessage: '', summary: '' },
-                'interm1-area': { fullMessage: '', summary: '' },
-                'interm2-area': { fullMessage: '', summary: '' },
-                'creditor-area': { fullMessage: '', summary: '' }
-            };
+        document.getElementById("arrow1").style.visibility = "hidden";
+        document.getElementById("arrow2").style.visibility = "hidden";
+        document.getElementById("arrow3").style.visibility = "hidden";
 
-            document.getElementById("arrow1").style.visibility = "hidden";
-            document.getElementById("arrow2").style.visibility = "hidden";
-            document.getElementById("arrow3").style.visibility = "hidden";
+        document.getElementById("debtor-area").value =
+          messages["debtor-area"].summary;
+        document.getElementById("interm1-area").value =
+          messages["interm1-area"].summary;
+        document.getElementById("interm2-area").value =
+          messages["interm2-area"].summary;
+        document.getElementById("creditor-area").value =
+          messages["creditor-area"].summary;
+      }
 
-            document.getElementById('debtor-area').value = messages['debtor-area'].summary;
-            document.getElementById('interm1-area').value = messages['interm1-area'].summary;
-            document.getElementById('interm2-area').value = messages['interm2-area'].summary;
-            document.getElementById('creditor-area').value = messages['creditor-area'].summary;
-        }
+      async function uploadMsgFile() {
+        initializeMessages();
 
-        async function uploadMsgFile() {
+        const fileInput = document.getElementById("isoInput");
 
-            initializeMessages();
+        if (fileInput.files.length > 0) {
+          const file = fileInput.files[0];
+          const formData = new FormData();
+          formData.append("file", file);
 
-            const fileInput = document.getElementById('isoInput');
+          try {
+            const response = await fetch("/upload_msg_file", {
+              method: "POST",
+              body: formData,
+            });
 
-            if (fileInput.files.length > 0) {
-                const file = fileInput.files[0];
-                const formData = new FormData();
-                formData.append('file', file);
-
-                try {
-                    const response = await fetch('/upload_msg_file', {
-                        method: 'POST',
-                        body: formData,
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-
-                    const data = await response.json();
-                    messages['debtor-area'].fullMessage = data.full_message;
-                    messages['debtor-area'].summary = data.summary
-
-                    document.getElementById('debtor-area').value = messages['debtor-area'].summary;
-                    
-                } catch (error) {
-                    console.error('Error fetching the file content:', error);
-                }
-            } else {
-                console.log('No file selected');
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
             }
+
+            const data = await response.json();
+            messages["debtor-area"].fullMessage = data.full_message;
+            messages["debtor-area"].summary = data.summary;
+
+            document.getElementById("debtor-area").value =
+              messages["debtor-area"].summary;
+          } catch (error) {
+            console.error("Error fetching the file content:", error);
+          }
+        } else {
+          console.log("No file selected");
         }
+      }
 
-        async function initializeSmartContract() {
+      async function initializeSmartContract() {
+        var initText = document.getElementById("contract-init-area").value;
 
-            console.log("entered!!");
-            
-            var initText = document.getElementById("contract-init-area").value;
+        if (initText.length > 0) {
+          try {
+            const response = await fetch("/init_contracts", {
+              method: "POST",
+              body: JSON.stringify({ init_contracts_info: initText }),
+            });
 
-            if (initText.length > 0) {
-                try {
-                    const response = await fetch('/init_contracts', {
-                        method: 'POST',
-                        body: JSON.stringify({init_contracts_info: initText}),
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-
-                    const data = await response.json();
-                    document.getElementById('contract-init-area').value = data.msg;
-
-                } catch (error) {
-                    console.error('Error fetching the content:', error);
-                }
-            } else {
-                console.log('No file selected');
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
             }
+
+            const data = await response.json();
+            document.getElementById("contract-init-area").value = data.msg;
+          } catch (error) {
+            console.error("Error fetching the content:", error);
+          }
+        } else {
+          console.log("No init info!");
         }
+      }
 
+      async function getDCInfo() {
 
+        var initText = document.getElementById("get-info-area").value;
 
-        async function makeTransaction() {
+        if (initText.length > 0) {
+          try {
+            const response = await fetch("/get_dc_info", {
+              method: "POST",
+              body: JSON.stringify({ init_contracts_info: initText }),
+            });
 
-            if (messages['debtor-area'].fullMessage.length > 0) {
-                try {
-                    const response = await fetch('/make_transaction', {
-                        method: 'POST',
-                        body: JSON.stringify({iso_message: messages['debtor-area'].fullMessage}),
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-
-                    const data = await response.json();
-                    messages['interm1-area'].fullMessage = data.interm1_full_message;
-                    messages['interm1-area'].summary = data.interm1_summary;
-                    messages['interm2-area'].fullMessage = data.interm2_full_message;
-                    messages['interm2-area'].summary = data.interm2_summary;
-                    messages['creditor-area'].fullMessage = data.creditor_full_message;
-                    messages['creditor-area'].summary = data.creditor_summary;
-
-                    setTimeout(function () {
-                        document.getElementById("arrow1").style.visibility = "visible";
-                    }, 500);
-
-                    setTimeout(function () {
-                        document.getElementById('interm1-area').value = messages['interm1-area'].summary;
-                    }, 1500);
-                    
-
-                    setTimeout(function () {
-                        document.getElementById("arrow2").style.visibility = "visible";
-                    }, 2000);
-
-                    setTimeout(function () {
-                        document.getElementById('interm2-area').value = messages['interm2-area'].summary;
-                    }, 3000);     
-                    
-                    setTimeout(function () {
-                        document.getElementById("arrow3").style.visibility = "visible";
-                    }, 3500);
-
-                    setTimeout(function () {
-                        document.getElementById('creditor-area').value = messages['creditor-area'].summary;
-                    }, 4500);  
-
-                } catch (error) {
-                    console.error('Error fetching the file content:', error);
-                }
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
             }
+
+            const data = await response.json();
+            document.getElementById("get-info-area").value = data.msg;
+          } catch (error) {
+            console.error("Error fetching the content:", error);
+          }
+        } else {
+          console.log("No provided accounts to get the info from!");
         }
+      }
 
-        function toggleMessage(id) {
-            const textArea = document.getElementById(id);
-            const button = event.target;
+      async function makeTransaction() {
+        if (messages["debtor-area"].fullMessage.length > 0) {
+          try {
+            const response = await fetch("/make_transaction", {
+              method: "POST",
+              body: JSON.stringify({
+                iso_message: messages["debtor-area"].fullMessage,
+              }),
+            });
 
-            if (textArea.value === messages[id].summary && messages[id].fullMessage !== '') {
-                textArea.value = messages[id].fullMessage;
-                button.textContent = 'Show summary';
-            } else {
-                textArea.value = messages[id].summary;
-                button.textContent = 'Show full message';
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
             }
+
+            const data = await response.json();
+            messages["interm1-area"].fullMessage = data.interm1_full_message;
+            messages["interm1-area"].summary = data.interm1_summary;
+            messages["interm2-area"].fullMessage = data.interm2_full_message;
+            messages["interm2-area"].summary = data.interm2_summary;
+            messages["creditor-area"].fullMessage = data.creditor_full_message;
+            messages["creditor-area"].summary = data.creditor_summary;
+
+            setTimeout(function () {
+              document.getElementById("arrow1").style.visibility = "visible";
+            }, 500);
+
+            setTimeout(function () {
+              document.getElementById("interm1-area").value =
+                messages["interm1-area"].summary;
+            }, 1500);
+
+            setTimeout(function () {
+              document.getElementById("arrow2").style.visibility = "visible";
+            }, 2000);
+
+            setTimeout(function () {
+              document.getElementById("interm2-area").value =
+                messages["interm2-area"].summary;
+            }, 3000);
+
+            setTimeout(function () {
+              document.getElementById("arrow3").style.visibility = "visible";
+            }, 3500);
+
+            setTimeout(function () {
+              document.getElementById("creditor-area").value =
+                messages["creditor-area"].summary;
+            }, 4500);
+          } catch (error) {
+            console.error("Error fetching the file content:", error);
+          }
         }
+      }
+
+      function toggleMessage(id) {
+        const textArea = document.getElementById(id);
+        const button = event.target;
+
+        if (
+          textArea.value === messages[id].summary &&
+          messages[id].fullMessage !== ""
+        ) {
+          textArea.value = messages[id].fullMessage;
+          button.textContent = "Show summary";
+        } else {
+          textArea.value = messages[id].summary;
+          button.textContent = "Show full message";
+        }
+      }
     </script>
-</body>
-
+  </body>
 </html>

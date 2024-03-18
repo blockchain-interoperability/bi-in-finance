@@ -93,4 +93,4 @@ def get_summary(xml_data):
     info_string += f"Next Institution: {next_institution}"
 
     return info_string
-
+    
