@@ -9,10 +9,22 @@ import threading
 app = Flask(__name__)
 
 web3 = Web3(Web3.HTTPProvider('http://localhost:8545'))
-web3.eth.defaultAccount = web3.eth.accounts[3]
+web3.eth.defaultAccount = web3.eth.accounts[0]
+
+PRIVATE_KEYS = [0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80, 
+                0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d,
+                0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a,
+                0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6,
+                0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a,
+                0x8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba,
+                0x92db14e403b83dfe3df233f83dfa3a0d7096f21ca9b0d6d6b8d88b2b4ec1564e,
+                0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356,
+                0xdbda1821b80551c9d65939329250298aa3472ba22feea921c0cf5d620ea67b97,
+                0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6]
+
 
 ABI = util.get_contract_abi(file_name = "FinancialInstitution", contract_name = "FinancialInstitution")
-ADDRESS = "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6"
+ADDRESS = "0x700b6A60ce7EaaEA56F065753d8dcB9653dbAD35"
 
 contract = web3.eth.contract(address=ADDRESS, abi=ABI)
 
@@ -37,7 +49,6 @@ def upload_msg_file():
         dbtr_instruction = util.get_debtor_instructions(content)
 
         if web3.is_connected():
-
             tx_hash = contract.functions.initiate_transfer(dbtr_instruction).transact()
             tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
             
@@ -65,6 +76,39 @@ def upload_msg_file():
 
 
 
+def make_create_account_transaction(target_contract, anvil_acct_index, acct_type, acct):
+   
+    tx = target_contract.functions.create_account(acct_type, acct).build_transaction({
+        'chainId': 31337,
+        'nonce': web3.eth.get_transaction_count(web3.eth.accounts[anvil_acct_index]),
+        'from': web3.eth.accounts[anvil_acct_index]
+    })
+
+    signed_tx = web3.eth.account.sign_transaction(tx, PRIVATE_KEYS[anvil_acct_index])
+    tx_hash = web3.eth.send_raw_transaction(signed_tx.rawTransaction)
+    tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
+    
+    if tx_receipt.status != 1:
+        print("Transaction failed!")
+
+
+def make_deposit_transaction(target_contract, anvil_acct_index, acct, value):
+    tx = target_contract.functions.deposit(acct).build_transaction({
+        'chainId': 31337,
+        'nonce': web3.eth.get_transaction_count(web3.eth.accounts[anvil_acct_index]),
+        'from': web3.eth.accounts[anvil_acct_index],
+        'value': web3.to_wei(value, 'ether')
+    })
+
+    signed_tx = web3.eth.account.sign_transaction(tx, PRIVATE_KEYS[anvil_acct_index])
+    tx_hash = web3.eth.send_raw_transaction(signed_tx.rawTransaction)
+    tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
+    
+    if tx_receipt.status != 1:
+        print("Transaction failed!")
+
+
+
 @app.route('/init_contracts', methods=['POST'])
 def init_contracts():
     data = request.get_json(force=True)
@@ -78,22 +122,20 @@ def init_contracts():
     I1_contract = web3.eth.contract(address=init_contracts_info['SmartContractAddresses'][1], abi=ABI)
     I2_contract = web3.eth.contract(address=init_contracts_info['SmartContractAddresses'][2], abi=ABI)
 
-    web3.eth.defaultAccount = web3.eth.accounts[0]
-    DA_contract.functions.create_account("general", init_contracts_info['DbtrAcct']).transact()
-    DA_contract.functions.deposit(init_contracts_info['DbtrAcct']).transact({'value': init_contracts_info['D_to_DA_DepositAmt']})
+    make_create_account_transaction(DA_contract, 0, "general", init_contracts_info['DbtrAcct'])
+    make_deposit_transaction(DA_contract, 0, init_contracts_info['DbtrAcct'], init_contracts_info['D_to_DA_DepositAmt'])
 
-    web3.eth.defaultAccount = web3.eth.accounts[1]
-    I1_contract.functions.create_account("nostro", init_contracts_info['DbtrAgtAcct']).transact()
-    I1_contract.functions.deposit("").transact({'value': init_contracts_info['DA_to_I1_DepositAmt']})
+    make_create_account_transaction(I1_contract, 1, "nostro", init_contracts_info['DbtrAgtAcct'])
+    make_deposit_transaction(I1_contract, 1, "", init_contracts_info['DA_to_I1_DepositAmt'])
 
-    web3.eth.defaultAccount = web3.eth.accounts[2]
-    I2_contract.functions.create_account("nostro", init_contracts_info['I1Acct']).transact()
-    I2_contract.functions.deposit("").transact({'value': init_contracts_info['I1_to_I2_DepositAmt']})
-    
-    web3.eth.defaultAccount = web3.eth.accounts[5]
-    I2_contract.functions.create_account("general", init_contracts_info['CdtrAcct']).transact()
+    make_create_account_transaction(I2_contract, 2, "nostro", init_contracts_info['I1Acct'])
+    make_deposit_transaction(I2_contract, 2, "", init_contracts_info['I1_to_I2_DepositAmt'])
 
-    return jsonify({'msg': "successful"}), 200
+    make_create_account_transaction(I2_contract, 5, "general", init_contracts_info['CdtrAcct'])
+
+    print("------------_> Successfull")
+
+    return jsonify({'msg': "Initialization successful!"}), 200
 
 
 

@@ -1,6 +1,7 @@
 import json
 import xmltodict
 
+
 def get_contract_abi(file_name, contract_name):
     contract_file_path = '../foundry_project/out/'+file_name+'.sol/'+contract_name+'.json'
     try:
@@ -92,3 +93,4 @@ def get_summary(xml_data):
     info_string += f"Next Institution: {next_institution}"
 
     return info_string
+

@@ -91,10 +91,10 @@ contract FinancialInstitution{
     {
         // acting as debtor agent
 
-        // require(generalAccountExists[dbtrIntruction.DbtrAcct][msg.sender], "Sender (Debtor) is not an account holder of this institution!");
-        // require(balances[dbtrIntruction.DbtrAcct] >= dbtrIntruction.IntrBkSttlmAmt.Amt, "Sender (Debtor) doesn't have sufficient balance in their account!" );
+        require(generalAccountExists[dbtrIntruction.DbtrAcct][msg.sender], "Sender (Debtor) is not an account holder of this institution!");
+        require(balances[dbtrIntruction.DbtrAcct] >= dbtrIntruction.IntrBkSttlmAmt.Amt, "Sender (Debtor) doesn't have sufficient balance in their account!" );
 
-        // balances[dbtrIntruction.DbtrAcct] -= dbtrIntruction.IntrBkSttlmAmt.Amt;
+        balances[dbtrIntruction.DbtrAcct] -= dbtrIntruction.IntrBkSttlmAmt.Amt;
 
         emit PassISOMessageAlong(dbtrIntruction.DbtrAgtIsoMsg, dbtrIntruction.NxtAgt);
     }
