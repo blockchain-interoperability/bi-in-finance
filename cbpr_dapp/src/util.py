@@ -55,6 +55,39 @@ def get_debtor_instructions(xml_data):
     return dbtr_instruction
 
 
+def get_msg_info(xml_data, updated_msg):
+
+    dict_data = convert_to_dict(xml_data)
+
+    sttlm_acct = ""
+
+    try:
+        sttlm_acct = dict_data['Document']['FIToFICstmrCdtTrf']['GrpHdr']['SttlmInf']['SttlmAcct']['Id']['Othr']['Id']
+    except KeyError:
+        print("Settlement account does not exist!")
+
+    msg_info = {
+        "CtrlSum": int(dict_data['Document']['FIToFICstmrCdtTrf']['GrpHdr']['CtrlSum']),
+        "TtlIntrBkSttlmAmt": dict_data['Document']['FIToFICstmrCdtTrf']['GrpHdr']['TtlIntrBkSttlmAmt'],
+        "InstgAgt": dict_data['Document']['FIToFICstmrCdtTrf']['GrpHdr']['InstgAgt']['FinInstnId']['BICFI'],
+        "InstdAgt": dict_data['Document']['FIToFICstmrCdtTrf']['GrpHdr']['InstdAgt']['FinInstnId']['BICFI'],
+        "IntrBkSttlmAmt": dict_data['Document']['FIToFICstmrCdtTrf']['CdtTrfTxInf']['IntrBkSttlmAmt'],
+        "InstdAmt": dict_data['Document']['FIToFICstmrCdtTrf']['CdtTrfTxInf']['InstdAmt'],
+        "XchgRate": int(dict_data['Document']['FIToFICstmrCdtTrf']['CdtTrfTxInf']['XchgRate']),
+        "DbtrAgt": dict_data['Document']['FIToFICstmrCdtTrf']['CdtTrfTxInf']['DbtrAgt']['FinInstnId']['BICFI'],
+        "DbtrAcct": dict_data['Document']['FIToFICstmrCdtTrf']['CdtTrfTxInf']['DbtrAcct']['Id']['Othr']['Id'],
+        "CdtrAgt": dict_data['Document']['FIToFICstmrCdtTrf']['CdtTrfTxInf']['CdtrAgt']['FinInstnId']['BICFI'],
+        "CdtrAcct": dict_data['Document']['FIToFICstmrCdtTrf']['CdtTrfTxInf']['CdtrAcct']['Id']['IBAN'],
+        "SttlmMtd": dict_data['Document']['FIToFICstmrCdtTrf']['GrpHdr']['SttlmInf']['SttlmMtd'],
+        "SttlmAcct": sttlm_acct,
+        "UpdtdMsg": updated_msg,
+        "NxtAgt": dict_data['Document']['FIToFICstmrCdtTrf']['GrpHdr']['InstdAgt']['FinInstnId']['BICFI']
+    }
+
+    return msg_info
+
+
+
 def get_summary(xml_data):
 
     data = convert_to_dict(xml_data)
@@ -89,8 +122,7 @@ def get_summary(xml_data):
     info_string += f"Transfer Amount: {transfer_amount}\n"
     info_string += f"Exchange Rate: {xchange_rate}\n\n"
 
-    info_string += f"Current Institution: {current_institution}\n"
-    info_string += f"Next Institution: {next_institution}"
+    info_string += f"Instructing Agent: {current_institution}\n"
+    info_string += f"Instructed Agent: {next_institution}"
 
     return info_string
-    

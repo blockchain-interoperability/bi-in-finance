@@ -2,7 +2,7 @@
     "DbtrAcct" : "A37856",
     "DbtrAgtAcct" : "BBBBBB",
     "I1Acct" : "CCCCCC",
-    "I2Acct" : "DDDDDD",
+    "CdtrAgtAcct" : "DDDDDD",
     "CdtrAcct" : "BG65893",
 
     "D_to_DA_DepositAmt" : 800,

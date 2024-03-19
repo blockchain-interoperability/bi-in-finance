@@ -6,7 +6,7 @@
          <CreDtTm>to-be-generated</CreDtTm>
          <InstgAgt>
             <FinInstnId>
-               <BICFI>0xd9145CCE52D386f254917e481eB44e9943F39138</BICFI>
+               <BICFI>0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC</BICFI>
                <Nm>BANK BETA</Nm>
                <PstlAdr>
                   <Ctry>CTRY-AXB</Ctry>
@@ -15,7 +15,7 @@
          </InstgAgt>
          <InstdAgt>
             <FinInstnId>
-               <BICFI>0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2</BICFI>
+               <BICFI>0x90F79bf6EB2c4f870365E785982E1f101E93b906</BICFI>
                <Nm>BANK THETA</Nm>
                <PstlAdr>
                   <Ctry>CTRY-DJK</Ctry>
@@ -54,7 +54,7 @@
             </DbtrAcct>
             <DbtrAgt>
                <FinInstnId>
-                  <BICFI>0x5B38Da6a701c568545dCfcB03FcB875f56beddC4</BICFI>
+                  <BICFI>0x70997970C51812dc3A010C7d01b50e0d17dc79C8</BICFI>
                   <Nm>Bank ALPHA</Nm>
                   <PstlAdr>
                      <Ctry>CTRY-AXB</Ctry>
@@ -63,7 +63,7 @@
             </DbtrAgt>
             <CdtrAgt>
                <FinInstnId>
-                  <BICFI>0xa131AD247055FD2e2aA8b156A11bdEc81b9eAD95</BICFI>
+                  <BICFI>0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65</BICFI>
                   <Nm>BANK GAMMA</Nm>
                   <PstlAdr>
                      <Ctry>CTRY-DJK</Ctry>

@@ -12,6 +12,8 @@ app = Flask(__name__)
 web3 = Web3(Web3.HTTPProvider('http://localhost:8545'))
 web3.eth.defaultAccount = web3.eth.accounts[0]
 
+ACCOUNT_TO_SC_ADDRESS = {}
+
 PRIVATE_KEYS = [0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80, 
                 0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d,
                 0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a,
@@ -25,9 +27,8 @@ PRIVATE_KEYS = [0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff
 
 
 ABI = util.get_contract_abi(file_name = "FinancialInstitution", contract_name = "FinancialInstitution")
-ADDRESS = "0xcA03Dc4665A8C3603cb4Fd5Ce71Af9649dC00d44"
+CONTRACT_ADDRESSES = []
 
-contract = web3.eth.contract(address=ADDRESS, abi=ABI)
 
 @app.route('/')
 def index():
@@ -49,28 +50,7 @@ def upload_msg_file():
         content = file.read().decode('utf-8')
         dbtr_instruction = util.get_debtor_instructions(content)
 
-        if web3.is_connected():
-            DA_contract = web3.eth.contract(address=ADDRESS, abi=ABI)
-            tx_receipt = make_initiate_transfer_transaction(DA_contract, 0, dbtr_instruction)
-
-            if tx_receipt.status == 1:
-                event_filter = contract.events.PassISOMessageAlong.create_filter(fromBlock='latest')
-                new_events = event_filter.get_all_entries()
-              
-                if new_events:
-                    last_event = new_events[-1]
-                    print(last_event['args']['updatedIsoMsg'])
-                    print(last_event['args']['receiver'])
-                else:
-                    print("No events found")
-
-                # return jsonify({'full_message': last_event['args']['updatedIsoMsg'], 'summary': last_event['args']['receiver']}), 200
-                return jsonify({'full_message': str(content), 'summary': str(dbtr_instruction)}), 200
-            else:
-                print("Transaction failed!")
-                return "Transaction failed!"
-        else:
-            return "Failed to read data from Smart Contract"
+        return jsonify({'full_message': str(content), 'summary': str(dbtr_instruction)}), 200
 
     else:
         return jsonify({'error': 'File not processed'}), 400
@@ -80,6 +60,21 @@ def upload_msg_file():
 def make_initiate_transfer_transaction(target_contract, anvil_acct_index, dbtr_instruction):
    
     tx = target_contract.functions.initiate_transfer(dbtr_instruction).build_transaction({
+        'chainId': 31337,
+        'nonce': web3.eth.get_transaction_count(web3.eth.accounts[anvil_acct_index]),
+        'from': web3.eth.accounts[anvil_acct_index]
+    })
+
+    signed_tx = web3.eth.account.sign_transaction(tx, PRIVATE_KEYS[anvil_acct_index])
+    tx_hash = web3.eth.send_raw_transaction(signed_tx.rawTransaction)
+    tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
+    
+    return tx_receipt
+
+
+def make_make_transfer_transaction(target_contract, anvil_acct_index, msg_details):
+   
+    tx = target_contract.functions.make_transfer(msg_details).build_transaction({
         'chainId': 31337,
         'nonce': web3.eth.get_transaction_count(web3.eth.accounts[anvil_acct_index]),
         'from': web3.eth.accounts[anvil_acct_index]
@@ -124,6 +119,70 @@ def make_deposit_transaction(target_contract, anvil_acct_index, acct, value):
         print("Transaction failed!")
 
 
+def execute_smart_contract(agent, iso_message, updated_iso_message):
+
+        if web3.is_connected():
+            tx_receipt = ''
+            
+            if agent == 'debtor-area':
+                dbtr_instruction = util.get_debtor_instructions(iso_message)
+                target_contract = web3.eth.contract(address=CONTRACT_ADDRESSES[0], abi=ABI)
+                tx_receipt = make_initiate_transfer_transaction(target_contract, 0, dbtr_instruction)
+
+                arrow_to_activate = 'arrow1'
+                area_to_populate = 'interm1-area'
+
+            elif agent == 'interm1-area':
+                msg_info = util.get_msg_info(iso_message, updated_iso_message)
+                target_contract = web3.eth.contract(address=CONTRACT_ADDRESSES[1], abi=ABI)
+                tx_receipt = make_make_transfer_transaction(target_contract, 1, msg_info)
+                
+                arrow_to_activate = 'arrow2'
+                area_to_populate = 'interm2-area'
+
+            elif agent == 'interm2-area':
+                msg_info = util.get_msg_info(iso_message, updated_iso_message)
+                target_contract = web3.eth.contract(address=CONTRACT_ADDRESSES[2], abi=ABI)
+                tx_receipt = make_make_transfer_transaction(target_contract, 2, msg_info)
+                
+                arrow_to_activate = 'arrow3'
+                area_to_populate = 'creditor-area'
+
+            elif agent == 'creditor-area':
+                msg_info = util.get_msg_info(iso_message, updated_iso_message)
+                target_contract = web3.eth.contract(address=CONTRACT_ADDRESSES[3], abi=ABI)
+                tx_receipt = make_make_transfer_transaction(target_contract, 3, msg_info)
+                
+                arrow_to_activate = 'none'
+                area_to_populate = 'none'
+
+            if tx_receipt.status == 1:
+                event_filter = target_contract.events.PassISOMessageAlong.create_filter(fromBlock='latest')
+                new_events = event_filter.get_all_entries()
+              
+                if new_events:
+                    last_event = new_events[-1]
+                    print(last_event['args']['updatedIsoMsg'])
+                    print(last_event['args']['receiver'])
+                    print("yay!!!")
+                else:
+                    print("No events found")
+
+                messages = jsonify({'full_message': last_event['args']['updatedIsoMsg'], 
+                    'summary': util.get_summary(last_event['args']['updatedIsoMsg']),
+                    'arrow_to_activate': arrow_to_activate, 
+                    'area_to_populate': area_to_populate
+                })
+
+                return messages
+
+            else:
+                print("Transaction failed!")
+                return "Transaction failed!"
+        else:
+            return "Failed to read data from Smart Contract"
+
+
 
 @app.route('/init_contracts', methods=['POST'])
 def init_contracts():
@@ -136,6 +195,7 @@ def init_contracts():
     DA_contract = web3.eth.contract(address=init_contracts_info['SmartContractAddresses'][0], abi=ABI)
     I1_contract = web3.eth.contract(address=init_contracts_info['SmartContractAddresses'][1], abi=ABI)
     I2_contract = web3.eth.contract(address=init_contracts_info['SmartContractAddresses'][2], abi=ABI)
+    CA_contract = web3.eth.contract(address=init_contracts_info['SmartContractAddresses'][3], abi=ABI)
 
     make_create_account_transaction(DA_contract, 0, "general", init_contracts_info['DbtrAcct'])
     make_deposit_transaction(DA_contract, 0, init_contracts_info['DbtrAcct'], init_contracts_info['D_to_DA_DepositAmt'])
@@ -146,7 +206,9 @@ def init_contracts():
     make_create_account_transaction(I2_contract, 2, "nostro", init_contracts_info['I1Acct'])
     make_deposit_transaction(I2_contract, 2, "", init_contracts_info['I1_to_I2_DepositAmt'])
 
-    make_create_account_transaction(I2_contract, 5, "general", init_contracts_info['CdtrAcct'])
+    make_create_account_transaction(I2_contract, 4, "nostro", init_contracts_info['CdtrAgtAcct'])
+
+    make_create_account_transaction(CA_contract, 5, "general", init_contracts_info['CdtrAcct'])
 
     return jsonify({'msg': "Initialization successful!"}), 200
 
@@ -167,84 +229,45 @@ def get_dc_info():
     DbtrAcct_balance = DA_contract.functions.get_balance(init_contracts_info['DbtrAcct']).call()
     DbtrAgtAcct_balance = I1_contract.functions.get_balance(init_contracts_info['DbtrAgtAcct']).call()
     I1Acct_balance = I2_contract.functions.get_balance(init_contracts_info['I1Acct']).call()
+    CdtrAgtAcct_balance = I2_contract.functions.get_balance(init_contracts_info['CdtrAgtAcct']).call()
     CdtrAcct_balance = CA_contract.functions.get_balance(init_contracts_info['CdtrAcct']).call()
 
     info_string = f"Debtor's Balance in Debtor Agent: {DbtrAcct_balance}\n"
     info_string += f"Debtor Agent's Balance in Intermediary 1: {DbtrAgtAcct_balance}\n"
     info_string += f"Intermediary 1's Balance in Intermediary 2: {I1Acct_balance}\n"
+    info_string += f"Creditor Agent's Balance in Intermediary 2: {CdtrAgtAcct_balance}\n"
     info_string += f"Creditor's Balance in Creditor Agent: {CdtrAcct_balance}"
 
     return jsonify({'msg': info_string}), 200
 
 
-def listen_to_events():
-    # event_filter = contract.events.PassISOMessageAlong.create_filter(fromBlock='latest')
-    # print("=============> ", event_filter)
-    
-    while True:
+# def listen_to_events():
+   
+#     while True:
 
-        filter = web3.eth.filter({
-            "fromBlock": "latest",
-            "address": ADDRESS,
-        })
+#         filter = web3.eth.filter({
+#             "fromBlock": "latest",
+#             "address": ADDRESS,
+#         })
 
-        new_events = filter.get_all_entries()
-        for event in new_events:
-            print("Received event:", event)
-
-
+#         new_events = filter.get_all_entries()
+#         for event in new_events:
+#             print("Received event:", event)
 
 
 @app.route('/make_transaction', methods=['POST'])
 def make_transaction():
     data = request.get_json(force=True)
     iso_message = data.get('iso_message')
-    
+    updated_iso_message = data.get('updated_iso_message')
+    agent = data.get('agent')
+
     if not iso_message:
         return jsonify({'error': 'No ISO Message'}), 400
+
+    return execute_smart_contract(agent, iso_message, updated_iso_message), 200
     
-    iso_message_interm1 = iso_message
-    iso_message_interm2 = iso_message
-    iso_message_creditor = iso_message
-
-    messages = jsonify({'interm1_full_message': iso_message_interm1, 
-        'interm1_summary': util.get_summary(iso_message_interm1),
-        'interm2_full_message': iso_message_interm2, 
-        'interm2_summary': util.get_summary(iso_message_interm2),
-        'creditor_full_message': iso_message_creditor, 
-        'creditor_summary': util.get_summary(iso_message_creditor)
-    })
-
-    return messages, 200
-
-
-
-
-@app.route('/connect_contract')
-def connect_contract():
-    if web3.is_connected():
-        return "Connected to Smart Contract. Address: " + ADDRESS
-    else:
-        return "Failed to connect to Smart Contract"
-
-
-@app.route('/read_data')
-def read_data():
-    if web3.is_connected():
-        data = contract.functions.getPerson().call()
-        return f"Fetched data: {data}"
-    else:
-        return "Failed to read data from Smart Contract"
-
-
-@app.route('/update_data', methods=['POST'])
-def update_data():
-    if web3.is_connected():
-        json_data = request.json
-        tx_hash = contract.functions.updatePerson(json_data).transact()
-        return f"Transaction Hash: {tx_hash.hex()}"
-    else:
-        return "Failed to update data on Smart Contract"
+    
 
 
 if __name__ == '__main__':
@@ -252,5 +275,21 @@ if __name__ == '__main__':
     # event_thread = threading.Thread(target=listen_to_events)
     # event_thread.daemon = True
     # event_thread.start()
+
+    sc_init_file_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'sc_init.json')
+
+    try:
+        with open(sc_init_file_path, 'r') as file:
+            data = json.load(file)
+            CONTRACT_ADDRESSES = data.get('SmartContractAddresses', [])  # Safely extract SmartContractAddresses
+    except FileNotFoundError:
+        print(f"File not found: {sc_init_file_path}")
+    except json.JSONDecodeError:
+        print("Error decoding JSON")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+    for i in range(0,  4):
+        ACCOUNT_TO_SC_ADDRESS[web3.eth.accounts[i+1]] = CONTRACT_ADDRESSES[i]
 
     app.run(debug=True)
