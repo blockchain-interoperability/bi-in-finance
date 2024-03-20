@@ -5,9 +5,9 @@
     "CdtrAgtAcct" : "DDDDDD",
     "CdtrAcct" : "BG65893",
 
-    "D_to_DA_DepositAmt" : 800,
-    "DA_to_I1_DepositAmt" : 700,
-    "I1_to_I2_DepositAmt" : 600,
+    "D_to_DA_DepositAmt" : 500,
+    "DA_to_I1_DepositAmt" : 500,
+    "I1_to_I2_DepositAmt" : 500,
 
     "AgentAddresses" : [
                         "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -19,9 +19,9 @@
                        ],
 
     "SmartContractAddresses" : [
-                                "0xcA03Dc4665A8C3603cb4Fd5Ce71Af9649dC00d44",
-                                "0x544eAe853EA3774A8857573C6423E6Db95b79258",
-                                "0xCE3478A9E0167a6Bc5716DC39DbbbfAc38F27623",
-                                "0x71a9d115E322467147391c4a71D85F8e1cA623EF"
+                                "0x63cf2Cd54fE91e3545D1379abf5bfd194545259d",
+                                "0xf764adBB39386BC744d533649D1EE3c86b0D6fD1",
+                                "0xcf27F781841484d5CF7e155b44954D7224caF1dD",
+                                "0xB737dD8FC9B304A3520B3bb609CC7532F1425Ad0"
                             ]
 }

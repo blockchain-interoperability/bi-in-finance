@@ -5,8 +5,8 @@
          <MsgId>to-be-generated</MsgId>
          <CreDtTm>2012-12-13T12:12:12</CreDtTm>
          <NbOfTxs>1</NbOfTxs>
-         <CtrlSum>1500000</CtrlSum>
-         <TtlIntrBkSttlmAmt Ccy="DJK">500000</TtlIntrBkSttlmAmt>
+         <CtrlSum>450</CtrlSum>
+         <TtlIntrBkSttlmAmt Ccy="ETH">150</TtlIntrBkSttlmAmt>
          <IntrBkSttlmDt>2012-12-13</IntrBkSttlmDt>
          <SttlmInf>
             <SttlmMtd>CLRG</SttlmMtd>
@@ -34,9 +34,9 @@
          <PmtId>
             <UETR>to-be-generated</UETR>
          </PmtId>
-         <IntrBkSttlmAmt Ccy="DJK">500000</IntrBkSttlmAmt>
+         <IntrBkSttlmAmt Ccy="ETH">150</IntrBkSttlmAmt>
          <IntrBkSttlmDt>2012-12-13</IntrBkSttlmDt>
-         <InstdAmt Ccy="DJK">500000</InstdAmt>
+         <InstdAmt Ccy="ETH">150</InstdAmt>
          <XchgRate>1</XchgRate>
          <PrvsInstgAgt1>
             <FinInstnId>

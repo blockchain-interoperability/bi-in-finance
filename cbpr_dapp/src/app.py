@@ -162,9 +162,9 @@ def execute_smart_contract(agent, iso_message, updated_iso_message):
               
                 if new_events:
                     last_event = new_events[-1]
-                    print(last_event['args']['updatedIsoMsg'])
-                    print(last_event['args']['receiver'])
-                    print("yay!!!")
+                    # print(last_event['args']['updatedIsoMsg'])
+                    # print(last_event['args']['receiver'])
+                    # print("yay!!!")
                 else:
                     print("No events found")
 
@@ -232,11 +232,11 @@ def get_dc_info():
     CdtrAgtAcct_balance = I2_contract.functions.get_balance(init_contracts_info['CdtrAgtAcct']).call()
     CdtrAcct_balance = CA_contract.functions.get_balance(init_contracts_info['CdtrAcct']).call()
 
-    info_string = f"Debtor's Balance in Debtor Agent: {DbtrAcct_balance}\n"
-    info_string += f"Debtor Agent's Balance in Intermediary 1: {DbtrAgtAcct_balance}\n"
-    info_string += f"Intermediary 1's Balance in Intermediary 2: {I1Acct_balance}\n"
-    info_string += f"Creditor Agent's Balance in Intermediary 2: {CdtrAgtAcct_balance}\n"
-    info_string += f"Creditor's Balance in Creditor Agent: {CdtrAcct_balance}"
+    info_string = f"Debtor's Balance in Debtor Agent          : {DbtrAcct_balance} ETH\n"
+    info_string += f"Debtor Agent's Balance in Intermediary 1  : {DbtrAgtAcct_balance} ETH\n"
+    info_string += f"Intermediary 1's Balance in Intermediary 2: {I1Acct_balance} ETH\n"
+    info_string += f"Creditor Agent's Balance in Intermediary 2: {CdtrAgtAcct_balance} ETH\n"
+    info_string += f"Creditor's Balance in Creditor Agent      : {CdtrAcct_balance} ETH"
 
     return jsonify({'msg': info_string}), 200
 

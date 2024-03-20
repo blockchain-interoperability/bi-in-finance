@@ -1,34 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-// [30, "0x2222222222222222222222222222222222222222", "0x8888888888888888888888888888888888888888", "0x4444444444444444444444444444444444444444", "Please process the transaction"]
-
-
-// ALPHA : 
-//     owner : 0x5B38Da6a701c568545dCfcB03FcB875f56beddC4
-//     contract address : 0xd9145CCE52D386f254917e481eB44e9943F39138
-    
-// BETA :
-//     owner : 0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2
-//     contract address : 0xa131AD247055FD2e2aA8b156A11bdEc81b9eAD95
-
-// THETA :
-//     owner : 0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db
-//     contract address : 0x9ecEA68DE55F316B702f27eE389D10C2EE0dde84
-
-// GAMMA :
-//     owner : 0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB
-//     contract address : 0x99CF4c4CAE3bA61754Abd22A8de7e8c7ba3C196d
-
-// Debtor:
-//     owner : 0x617F2E2fD72FD9D5503197092aC168c91465E7f2
-//     contract address : 0x1bB5bf909d1200fb4730d899BAd7Ab0aE8487B0b
-
-// Creditor:
-//     owner : 0x17F6AD8Ef982297579C203069C1DbfFE4348c372
-//     contract address : 0xE2DFC07f329041a05f5257f27CE01e4329FC64Ef
-
-
 contract FinancialInstitution{
 
     address _ownerAddress;

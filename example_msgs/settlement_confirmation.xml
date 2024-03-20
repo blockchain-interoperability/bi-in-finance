@@ -32,7 +32,7 @@
          <OrgnlUETR>populate from beta-theta pacs.008</OrgnlUETR>
          <TxSts>ACCC</TxSts>
          <OrgnlTxRef>
-            <IntrBkSttlmAmt ccy="AXB">500000</IntrBkSttlmAmt>
+            <IntrBkSttlmAmt ccy="ETH">150</IntrBkSttlmAmt>
             <IntrBkSttlmDt>2012-12-13</IntrBkSttlmDt>
             <SttlmInf>
                <SttlmMtd>INGA</SttlmMtd>
