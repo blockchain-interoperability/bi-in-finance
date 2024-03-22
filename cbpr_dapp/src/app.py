@@ -9,8 +9,13 @@ import threading
 
 app = Flask(__name__)
 
-web3 = Web3(Web3.HTTPProvider('http://localhost:8545'))
-web3.eth.defaultAccount = web3.eth.accounts[0]
+web3_1 = Web3(Web3.HTTPProvider('http://localhost:8545'))
+web3_2 = Web3(Web3.HTTPProvider('http://localhost:8546'))
+web3_1.eth.defaultAccount = web3_1.eth.accounts[0]
+web3_2.eth.defaultAccount = web3_2.eth.accounts[9]
+
+CHAIN_ID_1 = 31337
+CHAIN_ID_2 = 999
 
 ACCOUNT_TO_SC_ADDRESS = {}
 
@@ -57,10 +62,14 @@ def upload_msg_file():
 
 
 
-def make_initiate_transfer_transaction(target_contract, anvil_acct_index, dbtr_instruction):
+def make_initiate_transfer_transaction(target_contract, chain_id, anvil_acct_index, dbtr_instruction):
    
+    web3 = web3_1
+    if(chain_id == CHAIN_ID_2):
+        web3 = web3_2
+
     tx = target_contract.functions.initiate_transfer(dbtr_instruction).build_transaction({
-        'chainId': 31337,
+        'chainId': chain_id,
         'nonce': web3.eth.get_transaction_count(web3.eth.accounts[anvil_acct_index]),
         'from': web3.eth.accounts[anvil_acct_index]
     })
@@ -72,10 +81,14 @@ def make_initiate_transfer_transaction(target_contract, anvil_acct_index, dbtr_i
     return tx_receipt
 
 
-def make_make_transfer_transaction(target_contract, anvil_acct_index, msg_details):
+def make_make_transfer_transaction(target_contract, chain_id, anvil_acct_index, msg_details):
    
+    web3 = web3_1
+    if(chain_id == CHAIN_ID_2):
+        web3 = web3_2
+
     tx = target_contract.functions.make_transfer(msg_details).build_transaction({
-        'chainId': 31337,
+        'chainId': chain_id,
         'nonce': web3.eth.get_transaction_count(web3.eth.accounts[anvil_acct_index]),
         'from': web3.eth.accounts[anvil_acct_index]
     })
@@ -87,10 +100,14 @@ def make_make_transfer_transaction(target_contract, anvil_acct_index, msg_detail
     return tx_receipt
 
 
-def make_create_account_transaction(target_contract, anvil_acct_index, acct_type, acct):
+def make_create_account_transaction(target_contract, chain_id, anvil_acct_index, acct_type, acct):
    
+    web3 = web3_1
+    if(chain_id == CHAIN_ID_2):
+        web3 = web3_2
+
     tx = target_contract.functions.create_account(acct_type, acct).build_transaction({
-        'chainId': 31337,
+        'chainId': chain_id,
         'nonce': web3.eth.get_transaction_count(web3.eth.accounts[anvil_acct_index]),
         'from': web3.eth.accounts[anvil_acct_index]
     })
@@ -103,9 +120,14 @@ def make_create_account_transaction(target_contract, anvil_acct_index, acct_type
         print("Transaction failed!")
 
 
-def make_deposit_transaction(target_contract, anvil_acct_index, acct, value):
+def make_deposit_transaction(target_contract, chain_id, anvil_acct_index, acct, value):
+    
+    web3 = web3_1
+    if(chain_id == CHAIN_ID_2):
+        web3 = web3_2
+
     tx = target_contract.functions.deposit(acct).build_transaction({
-        'chainId': 31337,
+        'chainId': chain_id,
         'nonce': web3.eth.get_transaction_count(web3.eth.accounts[anvil_acct_index]),
         'from': web3.eth.accounts[anvil_acct_index],
         'value': value
@@ -121,66 +143,63 @@ def make_deposit_transaction(target_contract, anvil_acct_index, acct, value):
 
 def execute_smart_contract(agent, iso_message, updated_iso_message):
 
-        if web3.is_connected():
-            tx_receipt = ''
+        tx_receipt = ''
+        
+        if agent == 'debtor-area':
+            dbtr_instruction = util.get_debtor_instructions(iso_message)
+            target_contract = web3_1.eth.contract(address=CONTRACT_ADDRESSES[0], abi=ABI)
+            tx_receipt = make_initiate_transfer_transaction(target_contract, CHAIN_ID_1, 0, dbtr_instruction)
+
+            arrow_to_activate = 'arrow1'
+            area_to_populate = 'interm1-area'
+
+        elif agent == 'interm1-area':
+            msg_info = util.get_msg_info(iso_message, updated_iso_message)
+            target_contract = web3_2.eth.contract(address=CONTRACT_ADDRESSES[1], abi=ABI)
+            tx_receipt = make_make_transfer_transaction(target_contract, CHAIN_ID_2, 1, msg_info)
             
-            if agent == 'debtor-area':
-                dbtr_instruction = util.get_debtor_instructions(iso_message)
-                target_contract = web3.eth.contract(address=CONTRACT_ADDRESSES[0], abi=ABI)
-                tx_receipt = make_initiate_transfer_transaction(target_contract, 0, dbtr_instruction)
+            arrow_to_activate = 'arrow2'
+            area_to_populate = 'interm2-area'
 
-                arrow_to_activate = 'arrow1'
-                area_to_populate = 'interm1-area'
+        elif agent == 'interm2-area':
+            msg_info = util.get_msg_info(iso_message, updated_iso_message)
+            target_contract = web3_1.eth.contract(address=CONTRACT_ADDRESSES[2], abi=ABI)
+            tx_receipt = make_make_transfer_transaction(target_contract, CHAIN_ID_1, 2, msg_info)
+            
+            arrow_to_activate = 'arrow3'
+            area_to_populate = 'creditor-area'
 
-            elif agent == 'interm1-area':
-                msg_info = util.get_msg_info(iso_message, updated_iso_message)
-                target_contract = web3.eth.contract(address=CONTRACT_ADDRESSES[1], abi=ABI)
-                tx_receipt = make_make_transfer_transaction(target_contract, 1, msg_info)
-                
-                arrow_to_activate = 'arrow2'
-                area_to_populate = 'interm2-area'
+        elif agent == 'creditor-area':
+            msg_info = util.get_msg_info(iso_message, updated_iso_message)
+            target_contract = web3_2.eth.contract(address=CONTRACT_ADDRESSES[3], abi=ABI)
+            tx_receipt = make_make_transfer_transaction(target_contract, CHAIN_ID_2, 3, msg_info)
+            
+            arrow_to_activate = 'none'
+            area_to_populate = 'none'
 
-            elif agent == 'interm2-area':
-                msg_info = util.get_msg_info(iso_message, updated_iso_message)
-                target_contract = web3.eth.contract(address=CONTRACT_ADDRESSES[2], abi=ABI)
-                tx_receipt = make_make_transfer_transaction(target_contract, 2, msg_info)
-                
-                arrow_to_activate = 'arrow3'
-                area_to_populate = 'creditor-area'
-
-            elif agent == 'creditor-area':
-                msg_info = util.get_msg_info(iso_message, updated_iso_message)
-                target_contract = web3.eth.contract(address=CONTRACT_ADDRESSES[3], abi=ABI)
-                tx_receipt = make_make_transfer_transaction(target_contract, 3, msg_info)
-                
-                arrow_to_activate = 'none'
-                area_to_populate = 'none'
-
-            if tx_receipt.status == 1:
-                event_filter = target_contract.events.PassISOMessageAlong.create_filter(fromBlock='latest')
-                new_events = event_filter.get_all_entries()
-              
-                if new_events:
-                    last_event = new_events[-1]
-                    # print(last_event['args']['updatedIsoMsg'])
-                    # print(last_event['args']['receiver'])
-                    # print("yay!!!")
-                else:
-                    print("No events found")
-
-                messages = jsonify({'full_message': last_event['args']['updatedIsoMsg'], 
-                    'summary': util.get_summary(last_event['args']['updatedIsoMsg']),
-                    'arrow_to_activate': arrow_to_activate, 
-                    'area_to_populate': area_to_populate
-                })
-
-                return messages
-
+        if tx_receipt.status == 1:
+            event_filter = target_contract.events.PassISOMessageAlong.create_filter(fromBlock='latest')
+            new_events = event_filter.get_all_entries()
+            
+            if new_events:
+                last_event = new_events[-1]
+                # print(last_event['args']['updatedIsoMsg'])
+                # print(last_event['args']['receiver'])
+                # print("yay!!!")
             else:
-                print("Transaction failed!")
-                return "Transaction failed!"
+                print("No events found")
+
+            messages = jsonify({'full_message': last_event['args']['updatedIsoMsg'], 
+                'summary': util.get_summary(last_event['args']['updatedIsoMsg']),
+                'arrow_to_activate': arrow_to_activate, 
+                'area_to_populate': area_to_populate
+            })
+
+            return messages
+
         else:
-            return "Failed to read data from Smart Contract"
+            print("Transaction failed!")
+            return "Transaction failed!"
 
 
 
@@ -192,23 +211,23 @@ def init_contracts():
     if not init_contracts_info:
         return jsonify({'error': 'No init-contract-info'}), 400
     
-    DA_contract = web3.eth.contract(address=init_contracts_info['SmartContractAddresses'][0], abi=ABI)
-    I1_contract = web3.eth.contract(address=init_contracts_info['SmartContractAddresses'][1], abi=ABI)
-    I2_contract = web3.eth.contract(address=init_contracts_info['SmartContractAddresses'][2], abi=ABI)
-    CA_contract = web3.eth.contract(address=init_contracts_info['SmartContractAddresses'][3], abi=ABI)
+    DA_contract = web3_1.eth.contract(address=init_contracts_info['SmartContractAddresses'][0], abi=ABI)
+    I1_contract = web3_2.eth.contract(address=init_contracts_info['SmartContractAddresses'][1], abi=ABI)
+    I2_contract = web3_1.eth.contract(address=init_contracts_info['SmartContractAddresses'][2], abi=ABI)
+    CA_contract = web3_2.eth.contract(address=init_contracts_info['SmartContractAddresses'][3], abi=ABI)
 
-    make_create_account_transaction(DA_contract, 0, "general", init_contracts_info['DbtrAcct'])
-    make_deposit_transaction(DA_contract, 0, init_contracts_info['DbtrAcct'], init_contracts_info['D_to_DA_DepositAmt'])
+    make_create_account_transaction(DA_contract, CHAIN_ID_1, 0, "general", init_contracts_info['DbtrAcct'])
+    make_deposit_transaction(DA_contract, CHAIN_ID_1, 0, init_contracts_info['DbtrAcct'], init_contracts_info['D_to_DA_DepositAmt'])
 
-    make_create_account_transaction(I1_contract, 1, "nostro", init_contracts_info['DbtrAgtAcct'])
-    make_deposit_transaction(I1_contract, 1, "", init_contracts_info['DA_to_I1_DepositAmt'])
+    make_create_account_transaction(I1_contract, CHAIN_ID_2, 1, "nostro", init_contracts_info['DbtrAgtAcct'])
+    make_deposit_transaction(I1_contract, CHAIN_ID_2, 1, "", init_contracts_info['DA_to_I1_DepositAmt'])
 
-    make_create_account_transaction(I2_contract, 2, "nostro", init_contracts_info['I1Acct'])
-    make_deposit_transaction(I2_contract, 2, "", init_contracts_info['I1_to_I2_DepositAmt'])
+    make_create_account_transaction(I2_contract, CHAIN_ID_1, 2, "nostro", init_contracts_info['I1Acct'])
+    make_deposit_transaction(I2_contract, CHAIN_ID_1, 2, "", init_contracts_info['I1_to_I2_DepositAmt'])
 
-    make_create_account_transaction(I2_contract, 4, "nostro", init_contracts_info['CdtrAgtAcct'])
+    make_create_account_transaction(I2_contract, CHAIN_ID_1, 4, "nostro", init_contracts_info['CdtrAgtAcct'])
 
-    make_create_account_transaction(CA_contract, 5, "general", init_contracts_info['CdtrAcct'])
+    make_create_account_transaction(CA_contract, CHAIN_ID_2, 5, "general", init_contracts_info['CdtrAcct'])
 
     return jsonify({'msg': "Initialization successful!"}), 200
 
@@ -221,10 +240,10 @@ def get_dc_info():
     if not init_contracts_info:
         return jsonify({'error': 'No init-contract-info'}), 400
     
-    DA_contract = web3.eth.contract(address=init_contracts_info['SmartContractAddresses'][0], abi=ABI)
-    I1_contract = web3.eth.contract(address=init_contracts_info['SmartContractAddresses'][1], abi=ABI)
-    I2_contract = web3.eth.contract(address=init_contracts_info['SmartContractAddresses'][2], abi=ABI)
-    CA_contract = web3.eth.contract(address=init_contracts_info['SmartContractAddresses'][3], abi=ABI)
+    DA_contract = web3_1.eth.contract(address=init_contracts_info['SmartContractAddresses'][0], abi=ABI)
+    I1_contract = web3_2.eth.contract(address=init_contracts_info['SmartContractAddresses'][1], abi=ABI)
+    I2_contract = web3_1.eth.contract(address=init_contracts_info['SmartContractAddresses'][2], abi=ABI)
+    CA_contract = web3_2.eth.contract(address=init_contracts_info['SmartContractAddresses'][3], abi=ABI)
 
     DbtrAcct_balance = DA_contract.functions.get_balance(init_contracts_info['DbtrAcct']).call()
     DbtrAgtAcct_balance = I1_contract.functions.get_balance(init_contracts_info['DbtrAgtAcct']).call()
@@ -290,6 +309,6 @@ if __name__ == '__main__':
         print(f"An error occurred: {e}")
 
     for i in range(0,  4):
-        ACCOUNT_TO_SC_ADDRESS[web3.eth.accounts[i+1]] = CONTRACT_ADDRESSES[i]
+        ACCOUNT_TO_SC_ADDRESS[web3_1.eth.accounts[i+1]] = CONTRACT_ADDRESSES[i]
 
     app.run(debug=True)
