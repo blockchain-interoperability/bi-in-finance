@@ -2,10 +2,12 @@
 
 contract="src/FinancialInstitution.sol:FinancialInstitution"
 
-# RPC URLs for the two Anvil instances
+# RPC URLs for the four Anvil instances
 rpc_urls=(
     "http://localhost:8545"
     "http://localhost:8546"
+    "http://localhost:8547"
+    "http://localhost:8548"
 )
 
 private_keys=(
@@ -17,8 +19,7 @@ private_keys=(
 
 index=0
 for key in "${private_keys[@]}"; do
-    chain_index=$((index % 2))
-    rpc_url=${rpc_urls[$chain_index]}
+    rpc_url=${rpc_urls[$index]}
 
     forge create --rpc-url="$rpc_url" --private-key="$key" "$contract"
 
