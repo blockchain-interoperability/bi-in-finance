@@ -42,7 +42,17 @@
 
     <div class="transaction">
       <section class="content-box">
-        <div class="title-bar">Debtor Agent</div>
+        <div class="title-bar">
+          Debtor Agent
+          <span
+            style="
+              margin-left: 10px;
+              padding: 1px 10px 1px 10px;
+              background-color: #ebff6d;
+            "
+            >Chain A</span
+          >
+        </div>
         <textarea class="content-space" id="debtor-area"></textarea>
         <div>
           <button class="toggle-btn" onclick="toggleMessage('debtor-area')">
@@ -56,7 +66,17 @@
       <div class="arrow hidden" id="arrow1"></div>
 
       <section class="content-box">
-        <div class="title-bar">Intermediary 1</div>
+        <div class="title-bar">
+          Intermediary 1
+          <span
+            style="
+              margin-left: 10px;
+              padding: 1px 10px 1px 10px;
+              background-color: #ffcccc;
+            "
+            >Chain B</span
+          >
+        </div>
         <textarea class="content-space" id="interm1-area"></textarea>
         <div>
           <button class="toggle-btn" onclick="toggleMessage('interm1-area')">
@@ -73,7 +93,17 @@
       <div class="arrow hidden" id="arrow2"></div>
 
       <section class="content-box">
-        <div class="title-bar">Intermediary 2</div>
+        <div class="title-bar">
+          Intermediary 2
+          <span
+            style="
+              margin-left: 10px;
+              padding: 1px 10px 1px 10px;
+              background-color: #e0ffe0;
+            "
+            >Chain C</span
+          >
+        </div>
         <textarea class="content-space" id="interm2-area"></textarea>
         <div>
           <button class="toggle-btn" onclick="toggleMessage('interm2-area')">
@@ -90,7 +120,17 @@
       <div class="arrow hidden" id="arrow3"></div>
 
       <section class="content-box">
-        <div class="title-bar">Creditor Agent</div>
+        <div class="title-bar">
+          Creditor Agent
+          <span
+            style="
+              margin-left: 10px;
+              padding: 1px 10px 1px 10px;
+              background-color: #fcff11;
+            "
+            >Chain D</span
+          >
+        </div>
         <textarea class="content-space" id="creditor-area"></textarea>
         <div>
           <button class="toggle-btn" onclick="toggleMessage('creditor-area')">
@@ -202,25 +242,20 @@
 
       async function getDCInfo() {
         var initText = document.getElementById("get-info-area").value;
+        try {
+          const response = await fetch("/get_dc_info", {
+            method: "POST",
+            body: JSON.stringify({ init_contracts_info: initText }),
+          });
 
-        if (initText.length > 0) {
-          try {
-            const response = await fetch("/get_dc_info", {
-              method: "POST",
-              body: JSON.stringify({ init_contracts_info: initText }),
-            });
-
-            if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            document.getElementById("get-info-area").value = data.msg;
-          } catch (error) {
-            console.error("Error fetching the content:", error);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
           }
-        } else {
-          console.log("No provided accounts to get the info from!");
+
+          const data = await response.json();
+          document.getElementById("get-info-area").value = data.msg;
+        } catch (error) {
+          console.error("Error fetching the content:", error);
         }
       }
 
@@ -242,22 +277,21 @@
 
             const data = await response.json();
 
-            if(data.area_to_populate !== 'none')
-            {
-                messages[data.area_to_populate].fullMessage = data.full_message;
-                messages[data.area_to_populate].summary = data.summary;
-            
-                setTimeout(function () {
-                document.getElementById(data.arrow_to_activate).style.visibility =
-                    "visible";
-                }, 500);
+            if (data.area_to_populate !== "none") {
+              messages[data.area_to_populate].fullMessage = data.full_message;
+              messages[data.area_to_populate].summary = data.summary;
 
-                setTimeout(function () {
+              setTimeout(function () {
+                document.getElementById(
+                  data.arrow_to_activate
+                ).style.visibility = "visible";
+              }, 500);
+
+              setTimeout(function () {
                 document.getElementById(data.area_to_populate).value =
-                    messages[data.area_to_populate].summary;
-                }, 1000);
+                  messages[data.area_to_populate].summary;
+              }, 1000);
             }
-
           } catch (error) {
             console.error("Error fetching the file content:", error);
           }

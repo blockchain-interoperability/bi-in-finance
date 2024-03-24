@@ -9,19 +9,12 @@
          <TtlIntrBkSttlmAmt Ccy="ETH">150</TtlIntrBkSttlmAmt>
          <IntrBkSttlmDt>2012-12-13</IntrBkSttlmDt>
          <SttlmInf>
-            <SttlmMtd>INGA</SttlmMtd>
-            <SttlmAcct>
-               <Id>
-                  <Othr>
-                     <Id>BN987654</Id>
-                  </Othr>
-               </Id>
-            </SttlmAcct>
+            <SttlmMtd>CLRG</SttlmMtd>
          </SttlmInf>
          <InstgAgt>
             <FinInstnId>
-               <BICFI>0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC</BICFI>
-               <Nm>BANK BETA</Nm>
+               <BICFI>0x70997970C51812dc3A010C7d01b50e0d17dc79C8</BICFI>
+               <Nm>Bank ALPHA</Nm>
                <PstlAdr>
                   <Ctry>CTRY-AXB</Ctry>
                </PstlAdr>
@@ -29,10 +22,10 @@
          </InstgAgt>
          <InstdAgt>
             <FinInstnId>
-               <BICFI>0x90F79bf6EB2c4f870365E785982E1f101E93b906</BICFI>
-               <Nm>BANK THETA</Nm>
+               <BICFI>0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC</BICFI>
+               <Nm>BANK BETA</Nm>
                <PstlAdr>
-                  <Ctry>CTRY-DJK</Ctry>
+                  <Ctry>CTRY-AXB</Ctry>
                </PstlAdr>
             </FinInstnId>
          </InstdAgt>
@@ -47,8 +40,8 @@
          <XchgRate>1</XchgRate>
          <InstgAgt>
             <FinInstnId>
-               <BICFI>0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC</BICFI>
-               <Nm>BANK BETA</Nm>
+               <BICFI>0x70997970C51812dc3A010C7d01b50e0d17dc79C8</BICFI>
+               <Nm>Bank ALPHA</Nm>
                <PstlAdr>
                   <Ctry>CTRY-AXB</Ctry>
                </PstlAdr>
@@ -56,17 +49,26 @@
          </InstgAgt>
          <InstdAgt>
             <FinInstnId>
+               <BICFI>0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC</BICFI>
+               <Nm>BANK BETA</Nm>
+               <PstlAdr>
+                  <Ctry>CTRY-AXB</Ctry>
+               </PstlAdr>
+            </FinInstnId>
+         </InstdAgt>
+         <IntrmyAgt1>
+            <FinInstnId>
                <BICFI>0x90F79bf6EB2c4f870365E785982E1f101E93b906</BICFI>
                <Nm>BANK THETA</Nm>
                <PstlAdr>
                   <Ctry>CTRY-DJK</Ctry>
                </PstlAdr>
             </FinInstnId>
-         </InstdAgt>
+         </IntrmyAgt1>
          <Dbtr>
             <Nm>BINA Corp</Nm>
             <PstlAdr>
-               <Ctry>CTRY-AXB</Ctry>
+               <Ctry>USA</Ctry>
             </PstlAdr>
          </Dbtr>
          <DbtrAcct>
@@ -97,7 +99,7 @@
          <Cdtr>
             <Nm>PETROX Corp</Nm>
             <PstlAdr>
-               <Ctry>CTRY-DJK</Ctry>
+               <Ctry>UK</Ctry>
             </PstlAdr>
          </Cdtr>
          <CdtrAcct>

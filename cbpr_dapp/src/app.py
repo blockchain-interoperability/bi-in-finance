@@ -206,9 +206,9 @@ def init_contracts():
         return jsonify({'error': 'No init-contract-info'}), 400
     
     DA_contract = web3s[0].eth.contract(address=init_contracts_info['SmartContractAddresses'][0], abi=ABI)
-    I1_contract = web3_2.eth.contract(address=init_contracts_info['SmartContractAddresses'][1], abi=ABI)
-    I2_contract = web3_1.eth.contract(address=init_contracts_info['SmartContractAddresses'][2], abi=ABI)
-    CA_contract = web3_2.eth.contract(address=init_contracts_info['SmartContractAddresses'][3], abi=ABI)
+    I1_contract = web3s[1].eth.contract(address=init_contracts_info['SmartContractAddresses'][1], abi=ABI)
+    I2_contract = web3s[2].eth.contract(address=init_contracts_info['SmartContractAddresses'][2], abi=ABI)
+    CA_contract = web3s[3].eth.contract(address=init_contracts_info['SmartContractAddresses'][3], abi=ABI)
 
     make_create_account_transaction(DA_contract, 0, 0, "general", init_contracts_info['DbtrAcct'])
     make_deposit_transaction(DA_contract, 0, 0, init_contracts_info['DbtrAcct'], init_contracts_info['D_to_DA_DepositAmt'])
@@ -228,8 +228,18 @@ def init_contracts():
 
 @app.route('/get_dc_info', methods=['POST'])
 def get_dc_info():
-    data = request.get_json(force=True)
-    init_contracts_info = json.loads(data.get('init_contracts_info'))
+
+    sc_init_file_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'sc_init.json')
+    
+    try:
+        with open(sc_init_file_path, 'r') as file:
+            init_contracts_info = json.load(file)
+    except FileNotFoundError:
+        print(f"File not found: {sc_init_file_path}")
+    except json.JSONDecodeError:
+        print("Error decoding JSON")
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
     if not init_contracts_info:
         return jsonify({'error': 'No init-contract-info'}), 400
