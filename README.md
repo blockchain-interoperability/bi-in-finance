@@ -4,6 +4,11 @@ Demo Video:
 https://www.youtube.com/watch?v=BXOKMy0x-ng
 
 
+A framework leveraging blockchain technology and smart contracts to emulate cross-border payments, ensuring interoperability and compliance with international standards such as ISO20022. 
+
+![image](https://github.com/user-attachments/assets/2a6ccf94-4b66-4b6b-8fcc-63244c3f2ffa)
+
+
 ## Instructions
 
 * foundry_project (cbpr_dapp/foundry_project) should be used to deploy the smart contract (use deploy_contracts.sh with your intended rpc_urls and deploy commands). It can also be used to run local blockchains in the local machine. Follow the instructions in cbpr_dapp/foundry_project.
