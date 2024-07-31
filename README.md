@@ -15,3 +15,18 @@ A framework leveraging blockchain technology and smart contracts to emulate cros
 * python3 and flask should be installed to run the web client.
 * The smart contracts can be initialized from the web client with the information in sc_init.json.
 * ISO20022 standard pacs.008 messages maybe used for testing the transaction process
+
+
+### Cite
+
+https://arxiv.org/abs/2407.19283
+
+@misc{mridul2024smartcontractssmarterpayments,
+      title={Smart Contracts, Smarter Payments: Innovating Cross Border Payments and Reporting Transactions}, 
+      author={Maruf Ahmed Mridul and Kaiyang Chang and Aparna Gupta and Oshani Seneviratne},
+      year={2024},
+      eprint={2407.19283},
+      archivePrefix={arXiv},
+      primaryClass={cs.CE},
+      url={https://arxiv.org/abs/2407.19283}, 
+}
