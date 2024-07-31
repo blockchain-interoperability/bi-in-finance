@@ -21,6 +21,7 @@ A framework leveraging blockchain technology and smart contracts to emulate cros
 
 https://arxiv.org/abs/2407.19283
 
+```
 @misc{mridul2024smartcontractssmarterpayments,
       title={Smart Contracts, Smarter Payments: Innovating Cross Border Payments and Reporting Transactions}, 
       author={Maruf Ahmed Mridul and Kaiyang Chang and Aparna Gupta and Oshani Seneviratne},
